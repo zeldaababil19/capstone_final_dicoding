@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:capstone_final/screen/home_screen.dart';
-import 'package:capstone_final/screen/list_screen.dart';
+import 'package:capstone_final/page/list_page.dart';
+import 'package:capstone_final/page/login_page.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class _SplashScreen extends State<SplashScreen> {
   splashScreen() {
     var duration = const Duration(seconds: 3);
     return Timer(duration, () {
-      Navigator.pushReplacementNamed(context, ListPage.routeName);
+      Navigator.pushReplacementNamed(context, LoginPage.routeName);
     });
   }
 

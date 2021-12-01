@@ -1,4 +1,4 @@
-import 'package:capstone_final/styles/plus_icons.dart';
+import 'package:capstone_final/shared/plus_icons.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
