@@ -41,9 +41,10 @@ class _GoogleSIgnInButtonState extends State<GoogleSIgnInButton> {
                 if (user != null) {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => UserInfoScreen(
-                        user: user,
-                      ),
+                      // builder: (context) => UserInfoScreen(
+                      //   user: user,
+                      // ),
+                      builder: (context) => HomePage(user: user),
                     ),
                   );
                 }

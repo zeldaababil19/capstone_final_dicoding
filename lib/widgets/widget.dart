@@ -8,3 +8,4 @@ import 'package:provider/provider.dart';
 
 part 'sign_button_widget.dart';
 part 'bottom_navbar_widget.dart';
+part 'user_detail_widget.dart';
