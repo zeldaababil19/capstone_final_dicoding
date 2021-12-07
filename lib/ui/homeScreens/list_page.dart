@@ -1,6 +1,4 @@
-import 'package:capstone_final/shared/plus_icons.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+part of '../ui.dart';
 
 class ListPage extends StatefulWidget {
   static const routeName = '/home_page';
