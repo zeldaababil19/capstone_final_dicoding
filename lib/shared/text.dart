@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+part of 'shared.dart';
 
 final myTextTheme = TextTheme(
   headline1: GoogleFonts.poppins(fontSize: 82, fontWeight: FontWeight.w300, letterSpacing: -1.5),
