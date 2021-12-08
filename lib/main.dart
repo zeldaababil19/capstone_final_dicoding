@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
         initialRoute: SplashScreenPage.routeName,
         routes: {
           SplashScreenPage.routeName: (context) => SplashScreenPage(),
-          LoginPage.routeName: (context) => LoginPage(),
+          // LoginPage.routeName: (context) => LoginPage(),
+          HomePage.routeName: (context) => HomePage(),
           // RegisterPage.routeName: (context) => RegisterPage(),
           // HomePage.routeName: (context) => HomePage(
           //   _user: ModalRoute.of(context)?.settings.arguments as ,

@@ -1,19 +1,18 @@
 part of '../ui.dart';
 
-class ListPage extends StatefulWidget {
-  static const routeName = '/home_page';
-  const ListPage({Key? key}) : super(key: key);
+class JadwalScreens extends StatefulWidget {
+  const JadwalScreens({Key? key}) : super(key: key);
 
   @override
-  State<ListPage> createState() => _ListPageState();
+  _JadwalScreensState createState() => _JadwalScreensState();
 }
 
-class _ListPageState extends State<ListPage> {
+class _JadwalScreensState extends State<JadwalScreens> {
   final TextEditingController _filter = TextEditingController();
   Icon _searchIcon = const Icon(Icons.search);
-  Icon _user_md = const Icon(Plus.user_md);
+  Icon calendar = const Icon(Plus.calendar_check_o);
   Widget _appBar = Text(
-    'List Psikiater',
+    'Jadwalku',
     style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w900),
   );
 
@@ -22,7 +21,7 @@ class _ListPageState extends State<ListPage> {
     return Scaffold(
       appBar: AppBar(
         title: _appBar,
-        leading: Icon(Plus.user_md),
+        leading: calendar,
         actions: <Widget>[
           IconButton(
             icon: _searchIcon,
@@ -36,7 +35,7 @@ class _ListPageState extends State<ListPage> {
         color: baseColor,
         child: ListView(
           children: [
-            PsikiaterCardWidget(),
+            JadwalCardWidget(),
           ],
         ),
       ),

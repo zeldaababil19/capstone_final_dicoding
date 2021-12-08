@@ -13,3 +13,5 @@ part 'profileScreens/profile_screen.dart';
 part 'loginScreens/sign_in_screen.dart';
 part 'home_screen.dart';
 part 'listPsiScreens/list_page.dart';
+part 'jadwalScreens/jadwal_screen.dart';
+part 'historyScreens/histori_screen.dart';

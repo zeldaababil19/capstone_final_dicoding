@@ -8,3 +8,4 @@ import 'package:flutter/material.dart';
 
 part 'navigation_provider.dart';
 part 'user_provider.dart';
+part 'psikiater_provider.dart';

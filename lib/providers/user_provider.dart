@@ -1,34 +1,46 @@
 part of 'provider.dart';
 
 class UserProvider extends ChangeNotifier {
-  final String user;
+  int _patientIndex = 0;
 
-  UserProvider(BuildContext context, {required this.user}) {
-    getUser(context: context);
+  int get patientIndex => _patientIndex;
+
+  /// Merubah pasien yang dipilih untuk booking dokter
+  void changeIndex(int index) {
+    _patientIndex = index;
+
+    notifyListeners();
   }
+}
+// class UserProvider extends ChangeNotifier {
+//   final String user;
 
-  late UserDetail _userDetail;
-  late ResultState _state;
-  String _message = "";
+//   UserProvider(BuildContext context, {required this.user}) {
+//     getUser(context: context);
+//   }
 
-  UserDetail get result => _userDetail;
-  ResultState get state => _state;
-  String get message => _message;
+//   late UserDetail _userDetail;
+//   late ResultState _state;
+//   String _message = "";
 
-  static Future<FirebaseApp> getUser({required BuildContext context}) async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
+//   UserDetail get result => _userDetail;
+//   ResultState get state => _state;
+//   String get message => _message;
 
-    User? user = FirebaseAuth.instance.currentUser;
+//   static Future<FirebaseApp> getUser({required BuildContext context}) async {
+//     FirebaseApp firebaseApp = await Firebase.initializeApp();
 
-    if (user != null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => UserInfoScreen(user: user),
-        ),
-      );
-    }
-    return firebaseApp;
-  }
+//     User? user = FirebaseAuth.instance.currentUser;
+
+//     if (user != null) {
+//       Navigator.of(context).pushReplacement(
+//         MaterialPageRoute(
+//           builder: (context) => UserInfoScreen(user: user),
+//         ),
+//       );
+//     }
+//     return firebaseApp;
+//   }
 
   // Future<dynamic> _getUser() async {
   //   try {
@@ -62,4 +74,4 @@ class UserProvider extends ChangeNotifier {
   //     // return _message = 'Error: $error';
   //   }
   // }
-}
+// }

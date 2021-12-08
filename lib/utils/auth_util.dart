@@ -19,7 +19,8 @@ class Authentication {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => UserInfoScreen(user: user),
+          // builder: (context) => UserInfoScreen(user: user),
+          builder: (context) => HomePage(),
         ),
       );
     }
@@ -70,11 +71,14 @@ class Authentication {
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
     try {
+      await FirebaseAuth.instance.signOut();
+
       // await googleSignIn.signOut();
-      FirebaseAuth auth = FirebaseAuth.instance;
-      await auth.signOut().then((res) {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (Route<dynamic> route) => false);
-      });
+
+      // FirebaseAuth auth = FirebaseAuth.instance;
+      // await auth.signOut().then((res) {
+      //   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (Route<dynamic> route) => false);
+      // });
       print('telah logout');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

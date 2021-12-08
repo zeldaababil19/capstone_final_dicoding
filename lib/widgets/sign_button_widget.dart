@@ -44,7 +44,7 @@ class _GoogleSIgnInButtonState extends State<GoogleSIgnInButton> {
                       // builder: (context) => UserInfoScreen(
                       //   user: user,
                       // ),
-                      builder: (context) => HomePage(user: user),
+                      builder: (context) => HomePage(),
                     ),
                   );
                 }

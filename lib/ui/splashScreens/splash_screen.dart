@@ -7,12 +7,12 @@ class SplashScreenPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // User? result = FirebaseAuth.instance.currentUser;
     return SplashScreen.timer(
-      seconds: 6,
+      seconds: 3,
       // navigateAfterSeconds: result != null ? Home(uid: result.uid) : SignUp(),
       navigateAfterSeconds: LoginPage(),
       title: Text(
         "Halo Psikiater",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0, color: Colors.white),
       ),
       image: Image.asset("assets/images/splashscreen.png"),
       loadingTextPadding: EdgeInsets.all(0),

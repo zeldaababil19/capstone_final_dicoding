@@ -23,7 +23,7 @@ class _NavBarWidgetState extends State<NavBarWidget> {
         child: Container(
           height: 60,
           decoration: BoxDecoration(
-            color: baseColor,
+            color: whiteColor,
             boxShadow: [
               BoxShadow(
                 color: blackColor.withOpacity(0.12),
@@ -48,7 +48,7 @@ class _NavBarWidgetState extends State<NavBarWidget> {
                 context,
                 label: 'Jadwal',
                 icon: 'assets/images/calendar.png',
-                activeIcon: 'assets/images/calendar_active.png',
+                activeIcon: 'assets/images/calender_active.png',
               ),
               _buildBottomNavigationBarItems(
                 context,
