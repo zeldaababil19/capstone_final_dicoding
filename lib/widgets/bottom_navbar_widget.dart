@@ -23,7 +23,7 @@ class _NavBarWidgetState extends State<NavBarWidget> {
         child: Container(
           height: 60,
           decoration: BoxDecoration(
-            color: baseColor,
+            color: whiteColor,
             boxShadow: [
               BoxShadow(
                 color: blackColor.withOpacity(0.12),
@@ -41,26 +41,26 @@ class _NavBarWidgetState extends State<NavBarWidget> {
               _buildBottomNavigationBarItems(
                 context,
                 label: 'Psikiater',
-                icon: 'assets/images/',
-                activeIcon: 'assets/images/',
+                icon: 'assets/images/psikiater.png',
+                activeIcon: 'assets/images/psikiater_active.png',
               ),
               _buildBottomNavigationBarItems(
                 context,
-                label: 'Psikiater',
-                icon: 'assets/images/',
-                activeIcon: 'assets/images/',
+                label: 'Jadwal',
+                icon: 'assets/images/calendar.png',
+                activeIcon: 'assets/images/calender_active.png',
               ),
               _buildBottomNavigationBarItems(
                 context,
-                label: 'Psikiater',
-                icon: 'assets/images/',
-                activeIcon: 'assets/images/',
+                label: 'History',
+                icon: 'assets/images/history.png',
+                activeIcon: 'assets/images/history_active.png',
               ),
               _buildBottomNavigationBarItems(
                 context,
-                label: 'Psikiater',
-                icon: 'assets/images/',
-                activeIcon: 'assets/images/',
+                label: 'Profile',
+                icon: 'assets/images/profile.png',
+                activeIcon: 'assets/images/profile_active.png',
               ),
             ],
             onTap: (index) {

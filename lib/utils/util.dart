@@ -5,3 +5,4 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 part 'auth_util.dart';
+part 'enum_util.dart';

@@ -41,6 +41,7 @@ dependencies:
   google_sign_in: ^5.2.1
   firebase_database: ^8.0.1
   flutter_signin_button: ^2.0.0
+  cached_network_image: ^3.2.0
   splashscreen:
     git:
       url: https://github.com/DPLYR-dev/SplashScreenFlutterPackage.git
