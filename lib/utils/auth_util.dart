@@ -27,53 +27,57 @@ class Authentication {
     return firebaseApp;
   }
 
-  static Future<User?> signInWithGoogle({required BuildContext context}) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? user;
+  static Future<UserCredential> signInWithGoogle() async {
+    // FirebaseAuth auth = FirebaseAuth.instance;
+    // User? user;
 
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+    // final GoogleSignIn googleSignIn = GoogleSignIn();
 
-    final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-    if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
 
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+    // if (googleSignInAccount != null) {
+    //   final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
-      try {
-        final UserCredential userCredential = await auth.signInWithCredential(credential);
+    //   final AuthCredential credential = GoogleAuthProvider.credential(
+    //     accessToken: googleSignInAuthentication.accessToken,
+    //     idToken: googleSignInAuthentication.idToken,
+    //   );
 
-        user = userCredential.user;
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'account-exists-with-different-credential') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customSnackBar(content: 'Akun sudah ada'),
-          );
-        } else if (e.code == 'invalid-credential') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customSnackBar(content: 'terjadi kesalahan, coba beberapa saat lagi'),
-          );
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          Authentication.customSnackBar(content: 'Terjadi kesalahan saat melakukan sign google'),
-        );
-      }
-    }
+    //   try {
+    //     final UserCredential userCredential = await auth.signInWithCredential(credential);
 
-    return user;
+    //     user = userCredential.user;
+    //   } on FirebaseAuthException catch (e) {
+    //     if (e.code == 'account-exists-with-different-credential') {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         Authentication.customSnackBar(content: 'Akun sudah ada'),
+    //       );
+    //     } else if (e.code == 'invalid-credential') {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         Authentication.customSnackBar(content: 'terjadi kesalahan, coba beberapa saat lagi'),
+    //       );
+    //     }
+    //   } catch (e) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       Authentication.customSnackBar(content: 'Terjadi kesalahan saat melakukan sign google'),
+    //     );
+    //   }
+    // }
+
+    // return user;
   }
 
   static Future<void> signOut({required BuildContext context}) async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-
     try {
-      await FirebaseAuth.instance.signOut();
-
-      // await googleSignIn.signOut();
+      final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+      await _firebaseAuth.signOut();
 
       // FirebaseAuth auth = FirebaseAuth.instance;
       // await auth.signOut().then((res) {

@@ -16,6 +16,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     NavigationProvider navigation = Provider.of<NavigationProvider>(context);
+    final FirebaseAuth auth = FirebaseAuth.instance;
+
+    final User? user = auth.currentUser;
+    user!.uid;
+    // User? user = FirebaseAuth.instance.currentUser;
 
     // if (user != null) {
     //   Navigator.of(context).pushReplacement(
@@ -50,8 +55,8 @@ class _HomePageState extends State<HomePage> {
                     // Text('halo jadwal page'),
                     // HistoryScreen(),
                     Text('halo ini histori page'),
-                    // UserInfoScreen(user: _user),
-                    Text('halo ini user page'),
+                    UserInfoScreen(user: user),
+                    // Text('halo ini user page'),
                   ],
                 ),
                 NavBarWidget(context),

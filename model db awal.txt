@@ -10,3 +10,11 @@ alumnis : 0 -> lulus : S1 Universitas Indonesia
 
 jadwal : 0 -> tanggal : 8 December 2021 8:00:00 AM
 	 1 -> tanggal : 8 December 2021 9:00:00 AM
+
+gs://localhost-309420.appspot.com/doctor.png
+
+gs://localhost-309420.appspot.com/dokter laki.jpeg
+
+gs://localhost-309420.appspot.com/dokter-cewe.jpg
+
+gs://localhost-309420.appspot.com/dokter_female.jpg
