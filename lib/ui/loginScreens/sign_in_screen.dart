@@ -25,22 +25,22 @@ class _LoginPageState extends State<LoginPage> {
           slivers: <Widget>[
             SliverList(
               delegate: SliverChildListDelegate([
-                SizedBox(height: 30),
+                // SizedBox(height: 30),
                 Row(
                   children: <Widget>[
-                    SizedBox(width: 18),
+                    SizedBox(width: 12),
                     Text(
                       'Halo Psikiater',
                       style: Theme.of(context).textTheme.headline3,
                     ),
-                    SizedBox(width: 16),
+                    SizedBox(width: 6),
                     Expanded(
                       child: Divider(
                         thickness: 3,
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(width: 30),
+                    SizedBox(width: 12),
                   ],
                 ),
                 Padding(

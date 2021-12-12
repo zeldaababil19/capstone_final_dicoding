@@ -28,25 +28,24 @@ class UserDetailed {
   UserDetailed({
     required this.name,
     required this.email,
-    required this.tgl,
-    required this.kelamin,
+    required this.ttgl,
+    required this.jekel,
     required this.pictureId,
     required this.noHp,
   });
 
   String name;
   String email;
-  String tgl;
-  String kelamin;
+  String ttgl;
+  String jekel;
   String pictureId;
   String noHp;
 
   factory UserDetailed.fromJson(Map<String, dynamic> json) => UserDetailed(
-
         name: json["name"],
         email: json["email"],
-        tgl: json["tgl"],
-        kelamin: json["kelamin"],
+        ttgl: json["ttgl"],
+        jekel: json["jekel"],
         pictureId: json["pictureId"],
         noHp: json["noHp"],
       );
@@ -54,8 +53,8 @@ class UserDetailed {
   Map<String, dynamic> toJson() => {
         "name": name,
         "email": email,
-        "tgl": tgl,
-        "kelamin": kelamin,
+        "ttgl": ttgl,
+        "jekel": jekel,
         "pictureId": pictureId,
         "noHp": noHp,
       };

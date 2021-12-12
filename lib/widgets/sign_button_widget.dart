@@ -16,7 +16,7 @@ class _GoogleSIgnInButtonState extends State<GoogleSIgnInButton> {
       padding: const EdgeInsets.only(bottom: 16.0),
       child: _isSigningIn
           ? CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
             )
           : OutlinedButton(
               style: ButtonStyle(
@@ -32,22 +32,29 @@ class _GoogleSIgnInButtonState extends State<GoogleSIgnInButton> {
                   _isSigningIn = true;
                 });
 
-                User? user = await Authentication.signInWithGoogle(context: context);
+                await Authentication.signInWithGoogle();
 
                 setState(() {
                   _isSigningIn = false;
                 });
-
-                if (user != null) {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      // builder: (context) => UserInfoScreen(
-                      //   user: user,
-                      // ),
-                      builder: (context) => HomePage(),
-                    ),
-                  );
-                }
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    // builder: (context) => UserInfoScreen(
+                    //   user: user,
+                    // ),
+                    builder: (context) => HomePage(),
+                  ),
+                );
+                // if (user != null) {
+                //   Navigator.of(context).pushReplacement(
+                //     MaterialPageRoute(
+                //       // builder: (context) => UserInfoScreen(
+                //       //   user: user,
+                //       // ),
+                //       builder: (context) => HomePage(),
+                //     ),
+                //   );
+                // }
               },
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),

@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  
   runApp(MyApp());
 }
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
           // RegisterPage.routeName: (context) => RegisterPage(),
           // HomePage.routeName: (context) => HomePage(
           //   _user: ModalRoute.of(context)?.settings.arguments as ,
-          // ),
+          // ),flui
           // UserInfoScreen.routeName: (context) => UserInfoScreen(user: context.user),
         },
       ),

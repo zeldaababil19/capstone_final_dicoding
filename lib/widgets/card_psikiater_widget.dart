@@ -1,10 +1,18 @@
 part of 'widget.dart';
 
-class PsikiaterCardWidget extends StatelessWidget {
+class PsikiaterCardWidget extends StatefulWidget {
   const PsikiaterCardWidget({Key? key}) : super(key: key);
 
   @override
+  State<PsikiaterCardWidget> createState() => _PsikiaterCardWidgetState();
+}
+
+class _PsikiaterCardWidgetState extends State<PsikiaterCardWidget> {
+  @override
   Widget build(BuildContext context) {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference psikiater = firestore.collection('psikiater');
+
     return GestureDetector(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
@@ -18,6 +26,7 @@ class PsikiaterCardWidget extends StatelessWidget {
           ),
           child: Row(
             children: [
+              // StreamBuilder
               Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: CachedNetworkImage(
