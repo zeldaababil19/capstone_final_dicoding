@@ -1,0 +1,25 @@
+import 'package:capstone_final/providers/provider.dart';
+import 'package:capstone_final/services/service.dart';
+import 'package:capstone_final/shared/shared.dart';
+import 'package:capstone_final/shared/shared.dart';
+import 'package:capstone_final/utils/calendar_client.dart';
+import 'package:capstone_final/utils/util.dart';
+import 'package:capstone_final/widgets/widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:provider/provider.dart';
+import 'package:googleapis/calendar/v3.dart' as cal;
+import 'package:splashscreen/splashscreen.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+part 'splashScreens/splash_screen.dart';
+part 'profileScreens/profile_screen.dart';
+part 'loginScreens/sign_in_screen.dart';
+part 'home_screen.dart';
+part 'listPsiScreens/list_page.dart';
+part 'jadwalScreens/jadwal_screen.dart';
+part 'historyScreens/histori_screen.dart';
+part 'loginScreens/register_screen.dart';
