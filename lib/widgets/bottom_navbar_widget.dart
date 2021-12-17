@@ -89,7 +89,7 @@ BottomNavigationBarItem _buildBottomNavigationBarItems(
 }) {
   return BottomNavigationBarItem(
     label: label,
-    icon: (label == 'Psikiater')
+    icon: (label == 'Profile')
         ? Consumer<NavigationProvider>(
             builder: (
               context,
@@ -116,7 +116,7 @@ BottomNavigationBarItem _buildBottomNavigationBarItems(
               icon,
             ),
           ),
-    activeIcon: (label == 'Psikiater')
+    activeIcon: (label == 'Profile')
         ? Consumer<NavigationProvider>(
             builder: (
               context,

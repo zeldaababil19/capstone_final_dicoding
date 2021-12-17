@@ -31,11 +31,11 @@ class MyApp extends StatelessWidget {
         initialRoute: SplashScreenPage.routeName,
         routes: {
           SplashScreenPage.routeName: (context) => SplashScreenPage(),
-          LoginPage.routeName: (context) => LoginPage(),
-          RegisterPage.routeName: (context) => RegisterPage(),
+          // LoginPage.routeName: (context) => LoginPage(),
+          // RegisterPage.routeName: (context) => RegisterPage(),
           HomePage.routeName: (context) => HomePage(),
-          UserInfoScreen.routeName: (context) => UserInfoScreen(user: user),
-          JadwalScreens.routeName: (context) => JadwalScreens(),
+          // UserInfoScreen.routeName: (context) => UserInfoScreen(user: user),
+          // JadwalScreens.routeName: (context) => JadwalScreens(),
           //Psikiatercreens.routename: (context) => Psikiater
         },
       ),

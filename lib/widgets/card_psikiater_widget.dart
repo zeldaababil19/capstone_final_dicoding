@@ -12,20 +12,16 @@ class _PsikiaterCardWidgetState extends State<PsikiaterCardWidget> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('doctors').orderBy('rating', descending: true).snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+        stream: FirebaseFirestore.instance.collection('psikiaters').orderBy('rating', descending: true).snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
             return ListView.builder(
                 scrollDirection: Axis.vertical,
                 physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
-                // itemCount: 2,
+                itemCount: 2,
                 itemBuilder: (context, index) {
-                  DocumentSnapshot doctor = snapshot.data!.docs[index];
+                  DocumentSnapshot psikiater = snapshot.data!.docs[index];
                   return GestureDetector(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
@@ -42,7 +38,7 @@ class _PsikiaterCardWidgetState extends State<PsikiaterCardWidget> {
                             Padding(
                               padding: const EdgeInsets.all(2.0),
                               child: CachedNetworkImage(
-                                imageUrl: doctor['image'],
+                                imageUrl: psikiater['image'],
                                 fit: BoxFit.cover,
                                 height: 100,
                                 width: 100,
@@ -66,8 +62,8 @@ class _PsikiaterCardWidgetState extends State<PsikiaterCardWidget> {
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(doctor['name'], style: myTextTheme.bodyText1),
-                                          Text(doctor['type'], style: myTextTheme.bodyText2),
+                                          Text(psikiater['name'], style: myTextTheme.bodyText1),
+                                          Text(psikiater['spesialis'], style: myTextTheme.bodyText2),
                                           Padding(
                                             padding: const EdgeInsets.only(top: 4),
                                             child: Row(
@@ -83,7 +79,7 @@ class _PsikiaterCardWidgetState extends State<PsikiaterCardWidget> {
                                                       width: 2,
                                                     ),
                                                     Text(
-                                                      "2 tahun",
+                                                      psikiater['experience'],
                                                       style: mediumBaseFont.copyWith(
                                                         color: darkGreyColor,
                                                         fontSize: 11,
@@ -105,7 +101,7 @@ class _PsikiaterCardWidgetState extends State<PsikiaterCardWidget> {
                                                       width: 2,
                                                     ),
                                                     Text(
-                                                      doctor['rating'].toString(),
+                                                      psikiater['rating'].toString(),
                                                       style: mediumBaseFont.copyWith(
                                                         color: darkGreyColor,
                                                         fontSize: 11,
@@ -149,18 +145,27 @@ class _PsikiaterCardWidgetState extends State<PsikiaterCardWidget> {
                         ),
                       ),
                     ),
-                    // onTap: onTap,
-                    // Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => DoctorProfile(
-                    //           doctor: doctor['name'],
-                    //         ),
-                    //       ),
-                    //     );
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PsikiaterProfile(
+                            psikiater: psikiater['name'],
+                          ),
+                        ),
+                      );
+                    },
                   );
                 });
-          }),
+          }
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+      ),
     );
   }
 }

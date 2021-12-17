@@ -1,7 +1,7 @@
-part of '../ui.dart';
+part of 'ui.dart';
 
 class RegisterPage extends StatefulWidget {
-  static const routeName = '/registerscreen';
+  static const routeName = '/register_screen';
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
@@ -404,14 +404,6 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  void prompt(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   void _registerAccount() async {
     User? user;
     UserCredential? credential;
@@ -439,16 +431,30 @@ class _RegisterPageState extends State<RegisterPage> {
 
       FirebaseFirestore.instance.collection('pasiens').doc(user.uid).set({
         'name': _nameController.text,
-        'birthDate': null,
+        'tgl': null,
         'email': user.email,
-        'phone': null,
-        'bio': null,
-        'city': null,
+        'noHp': null,
+        'alamat': null,
+        'image': null,
+        'jekel': null,
       }, SetOptions(merge: true));
-
-      Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          // builder: (context) => UserInfoScreen(user: user),
+          builder: (context) => HomePage(),
+        ),
+      );
+      // Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     } else {
       _isSuccess = false;
+    }
+  }
+
+  void prompt(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }

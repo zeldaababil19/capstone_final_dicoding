@@ -1,7 +1,7 @@
-part of '../ui.dart';
+part of 'ui.dart';
 
 class SplashScreenPage extends StatelessWidget {
-  static const routeName = '/splashScreen';
+  static const routeName = '/splash_Screen';
 
   @override
   Widget build(BuildContext context) {

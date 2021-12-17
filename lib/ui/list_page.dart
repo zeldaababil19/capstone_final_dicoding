@@ -1,29 +1,49 @@
-part of '../ui.dart';
+part of 'ui.dart';
 
-class JadwalScreens extends StatefulWidget {
-  static const routeName = '/jadwal_screen';
-
-  const JadwalScreens({Key? key}) : super(key: key);
+class ListPage extends StatefulWidget {
+  static const routeName = '/list_psikiater';
+  const ListPage({Key? key}) : super(key: key);
 
   @override
-  _JadwalScreensState createState() => _JadwalScreensState();
+  State<ListPage> createState() => _ListPageState();
 }
 
-class _JadwalScreensState extends State<JadwalScreens> {
-  final TextEditingController _filter = TextEditingController();
+class _ListPageState extends State<ListPage> {
+  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
+  TextEditingController _psikiaterController = TextEditingController();
+  FirebaseAuth _auth = FirebaseAuth.instance;
   Icon _searchIcon = const Icon(Icons.search);
-  Icon calendar = const Icon(Plus.calendar_check_o);
+  Icon _user_md = const Icon(Plus.user_md);
   Widget _appBar = Text(
-    'Jadwalku',
+    'List Psikiater',
     style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w900),
   );
+  late User user;
+
+  Future<void> _getUser() async {
+    user = _auth.currentUser!;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUser();
+    _psikiaterController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _psikiaterController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       appBar: AppBar(
         title: _appBar,
-        leading: calendar,
+        leading: Icon(Plus.user_md),
         actions: <Widget>[
           IconButton(
             icon: _searchIcon,
@@ -37,7 +57,7 @@ class _JadwalScreensState extends State<JadwalScreens> {
         color: baseColor,
         child: ListView(
           children: [
-            JadwalCardWidget(),
+            PsikiaterCardWidget(),
           ],
         ),
       ),
@@ -50,7 +70,7 @@ class _JadwalScreensState extends State<JadwalScreens> {
         if (_searchIcon.icon == Icons.search) {
           _searchIcon = Icon(Icons.close);
           _appBar = TextField(
-            controller: _filter,
+            controller: _psikiaterController,
             cursorColor: Colors.white,
             decoration: InputDecoration(hintText: 'Cari nama Psikiater'),
             onChanged: (query) => {
@@ -67,7 +87,7 @@ class _JadwalScreensState extends State<JadwalScreens> {
             style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w900),
           );
           // provider.getAllRestaurants();
-          _filter.clear();
+          _psikiaterController.clear();
         }
       },
     );

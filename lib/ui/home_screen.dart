@@ -51,9 +51,11 @@ class _HomePageState extends State<HomePage> {
                     ListPage(),
                     JadwalScreens(),
                     // Text('halo jadwal page'),
-                    // HistoryScreen(),
-                    Text('halo ini histori page'),
+                    HistoriScreens(),
+                    // Text('halo ini histori page'),
+
                     UserInfoScreen(user: user),
+                    // UserInfoScreen(),
                     // Text('halo ini user page'),
                   ],
                 ),

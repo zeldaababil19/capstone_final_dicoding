@@ -1,7 +1,7 @@
-part of '../ui.dart';
+part of 'ui.dart';
 
 class LoginPage extends StatefulWidget {
-  static const routeName = '/loginscreen';
+  static const routeName = '/login_screen';
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -271,7 +271,13 @@ class _LoginPageState extends State<LoginPage> {
       if (user!.emailVerified) {
         await user.sendEmailVerification();
       }
-      Navigator.of(context).pushNamedAndRemoveUntil('/home_page', (Route<dynamic> route) => false);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          // builder: (context) => UserInfoScreen(user: user),
+          builder: (context) => HomePage(),
+        ),
+      );
+      // Navigator.of(context).pushNamedAndRemoveUntil('/home_page', (Route<dynamic> route) => false);
       // await _auth.signInWithEmailAndPassword(email: email, password: password);
       // Navigator.pushReplacementNamed(context, HomePage.routeName);
     } catch (e) {

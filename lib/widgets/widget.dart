@@ -1,5 +1,6 @@
 import 'package:capstone_final/providers/provider.dart';
 import 'package:capstone_final/shared/shared.dart';
+import 'package:capstone_final/ui/detail_screen.dart';
 import 'package:capstone_final/ui/ui.dart';
 import 'package:capstone_final/utils/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,3 +17,4 @@ part 'search_widget.dart';
 part 'card_psikiater_widget.dart';
 part 'card_jadwal_widget.dart';
 part 'loader_widget.dart';
+part 'card_histori_widget.dart';

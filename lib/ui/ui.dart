@@ -15,11 +15,11 @@ import 'package:googleapis/calendar/v3.dart' as cal;
 import 'package:splashscreen/splashscreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-part 'splashScreens/splash_screen.dart';
-part 'profileScreens/profile_screen.dart';
-part 'loginScreens/sign_in_screen.dart';
+part 'splash_screen.dart';
+part 'profile_screen.dart';
+part 'sign_in_screen.dart';
 part 'home_screen.dart';
-part 'listPsiScreens/list_page.dart';
-part 'jadwalScreens/jadwal_screen.dart';
-part 'historyScreens/histori_screen.dart';
-part 'loginScreens/register_screen.dart';
+part 'list_page.dart';
+part 'jadwal_screen.dart';
+part 'histori_screen.dart';
+part 'register_screen.dart';
