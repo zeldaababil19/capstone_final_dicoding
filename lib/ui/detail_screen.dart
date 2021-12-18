@@ -1,8 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:capstone_final/shared/shared.dart';
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:url_launcher/url_launcher.dart';
+part of 'ui.dart';
 
 class PsikiaterProfile extends StatefulWidget {
   static const routeName = '/psikiater_detail_screen';
@@ -52,8 +48,8 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
                         child: CachedNetworkImage(
                           imageUrl: document['image'],
                           fit: BoxFit.cover,
-                          height: 200,
-                          width: 200,
+                          height: 150,
+                          width: 150,
                           placeholder: (context, url) => const CircleAvatar(
                             backgroundColor: Colors.blue,
                             radius: 5,
@@ -77,7 +73,6 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
                         ),
                       ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
@@ -217,6 +212,57 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
                                 ],
                               ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Icon(Icons.access_time),
+                                  SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Jadwal', style: fontTheme.bodyText1),
+                                      Text(
+                                        document['openHour'] + " - " + document['closeHour'],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // SizedBox(
+                            //   height: 50,
+                            // ),
+                            SizedBox(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 1,
+                                  primary: whiteColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    side: BorderSide(color: Colors.blue),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BookingScreen(
+                                        psikiater: document['name'],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  'Buat Jadwal Meet',
+                                  style: fontTheme.bodyText1?.copyWith(
+                                    color: accentColor,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         decoration: BoxDecoration(
@@ -233,199 +279,6 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
                         ),
                       ),
                     ),
-
-                    // SizedBox(
-                    //   height: 10,
-                    // ),
-                    // Text(
-                    //   document['spesialis'],
-                    //   style: GoogleFonts.lato(
-                    //       //fontWeight: FontWeight.bold,
-                    //       fontSize: 18,
-                    //       color: Colors.black54),
-                    // ),
-                    // SizedBox(
-                    //   height: 16,
-                    // ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     for (var i = 0; i < document['rating']; i++)
-                    //       Icon(
-                    //         Icons.star_rounded,
-                    //         color: Colors.indigoAccent,
-                    //         size: 30,
-                    //       ),
-                    //     if (5 - document['rating'] > 0)
-                    //       for (var i = 0; i < 5 - document['rating']; i++)
-                    //         Icon(
-                    //           Icons.star_rounded,
-                    //           color: Colors.black12,
-                    //           size: 30,
-                    //         ),
-                    //   ],
-                    // ),
-                    // SizedBox(
-                    //   height: 14,
-                    // ),
-                    // Container(
-                    //   padding: EdgeInsets.only(left: 22, right: 22),
-                    //   alignment: Alignment.center,
-                    //   child: Text(
-                    //     document['spesification'],
-                    //     textAlign: TextAlign.center,
-                    //     style: GoogleFonts.lato(
-                    //       fontSize: 14,
-                    //       color: Colors.black54,
-                    //     ),
-                    //   ),
-                    // ),
-                    // SizedBox(
-                    //   height: 20,
-                    // ),
-                    // Container(
-                    //   width: MediaQuery.of(context).size.width,
-                    //   margin: EdgeInsets.symmetric(horizontal: 10),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.start,
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       SizedBox(
-                    //         width: 15,
-                    //       ),
-                    //       Icon(Icons.place_outlined),
-                    //       SizedBox(
-                    //         width: 20,
-                    //       ),
-                    //       Container(
-                    //         width: MediaQuery.of(context).size.width / 1.4,
-                    //         child: Text(
-                    //           document['address'],
-                    //           style: GoogleFonts.lato(
-                    //             fontSize: 16,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       SizedBox(
-                    //         width: 10,
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // Container(
-                    //   height: MediaQuery.of(context).size.height / 12,
-                    //   margin: EdgeInsets.symmetric(horizontal: 10),
-                    //   child: Row(
-                    //     children: [
-                    //       SizedBox(
-                    //         width: 15,
-                    //       ),
-                    //       Icon(Icons.phone),
-                    //       SizedBox(
-                    //         width: 11,
-                    //       ),
-                    //       TextButton(
-                    //         onPressed: () => _launchCaller("tel:" + document['phone']),
-                    //         child: Text(
-                    //           document['phone'].toString(),
-                    //           style: GoogleFonts.lato(fontSize: 16, color: Colors.blue),
-                    //         ),
-                    //       ),
-                    //       SizedBox(
-                    //         width: 10,
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // SizedBox(
-                    //   height: 0,
-                    // ),
-                    // Container(
-                    //   margin: EdgeInsets.symmetric(horizontal: 10),
-                    //   child: Row(
-                    //     children: [
-                    //       SizedBox(
-                    //         width: 15,
-                    //       ),
-                    //       Icon(Icons.access_time_rounded),
-                    //       SizedBox(
-                    //         width: 20,
-                    //       ),
-                    //       Text(
-                    //         'Working Hours',
-                    //         style: GoogleFonts.lato(
-                    //           fontSize: 16,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // SizedBox(
-                    //   height: 20,
-                    // ),
-                    // Container(
-                    //   margin: EdgeInsets.symmetric(horizontal: 10),
-                    //   padding: EdgeInsets.only(left: 60),
-                    //   child: Row(
-                    //     children: [
-                    //       Text(
-                    //         'Today: ',
-                    //         style: GoogleFonts.lato(
-                    //           fontSize: 16,
-                    //           fontWeight: FontWeight.bold,
-                    //         ),
-                    //       ),
-                    //       SizedBox(
-                    //         width: 10,
-                    //       ),
-                    //       Text(
-                    //         document['openHour'] + " - " + document['closeHour'],
-                    //         style: GoogleFonts.lato(
-                    //           fontSize: 17,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // SizedBox(
-                    //   height: 50,
-                    // ),
-                    // Container(
-                    //   padding: EdgeInsets.symmetric(horizontal: 30),
-                    //   height: 50,
-                    //   width: MediaQuery.of(context).size.width,
-                    //   child: ElevatedButton(
-                    //     style: ElevatedButton.styleFrom(
-                    //       elevation: 2,
-                    //       primary: Colors.indigo.withOpacity(0.9),
-                    //       onPrimary: Colors.black,
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(32.0),
-                    //       ),
-                    //     ),
-                    //     onPressed: () {
-                    //       // Navigator.push(
-                    //       //   context,
-                    //       //   MaterialPageRoute(
-                    //       //     builder: (context) => BookingScreen(
-                    //       //       psikiater: document['name'],
-                    //       //     ),
-                    //       //   ),
-                    //       // );
-                    //     },
-                    //     child: Text(
-                    //       'Book an Appointment',
-                    //       style: GoogleFonts.lato(
-                    //         color: Colors.white,
-                    //         fontSize: 16,
-                    //         fontWeight: FontWeight.bold,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    // SizedBox(
-                    //   height: 40,
-                    // ),
                   ],
                 );
               },

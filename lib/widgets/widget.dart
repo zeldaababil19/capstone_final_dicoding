@@ -1,6 +1,5 @@
 import 'package:capstone_final/providers/provider.dart';
 import 'package:capstone_final/shared/shared.dart';
-import 'package:capstone_final/ui/detail_screen.dart';
 import 'package:capstone_final/ui/ui.dart';
 import 'package:capstone_final/utils/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 
 part 'sign_button_widget.dart';
 part 'bottom_navbar_widget.dart';
@@ -18,3 +18,4 @@ part 'card_psikiater_widget.dart';
 part 'card_jadwal_widget.dart';
 part 'loader_widget.dart';
 part 'card_histori_widget.dart';
+part 'myBooking_List_widget.dart';
