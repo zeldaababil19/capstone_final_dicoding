@@ -73,7 +73,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               onPressed: () {},
               child: Text(
                 'edit',
-                style: mediumBaseFont.copyWith(
+                style: fontTheme.bodyText2?.copyWith(
                   color: whiteColor,
                 ),
               ),
@@ -91,7 +91,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               },
               child: Text(
                 'logout',
-                style: mediumBaseFont.copyWith(
+                style: fontTheme.bodyText2?.copyWith(
                   color: whiteColor,
                 ),
               ),

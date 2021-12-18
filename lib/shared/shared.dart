@@ -7,8 +7,7 @@ import 'package:provider/single_child_widget.dart';
 
 part 'color.dart';
 part 'plus_icons.dart';
-part 'text.dart';
+part 'font_theme.dart';
 part 'providers.dart';
-part 'font.dart';
 part 'resolution.dart';
 part 'route.dart';

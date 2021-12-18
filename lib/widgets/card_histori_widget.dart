@@ -64,14 +64,14 @@ class HistoriCardWidget extends StatelessWidget {
                                     children: [
                                       Text(
                                         '25',
-                                        style: mediumBaseFont.copyWith(
+                                        style: fontTheme.bodyText2?.copyWith(
                                           color: whiteColor,
                                           fontSize: 12,
                                         ),
                                       ),
                                       Text(
                                         'Kam',
-                                        style: mediumBaseFont.copyWith(
+                                        style: fontTheme.bodyText2?.copyWith(
                                           color: whiteColor,
                                           fontSize: 12,
                                         ),
@@ -167,7 +167,7 @@ class HistoriCardWidget extends StatelessWidget {
                                       ),
                                       Text(
                                         '2 tahun',
-                                        style: mediumBaseFont.copyWith(
+                                        style: fontTheme.bodyText2?.copyWith(
                                           color: darkGreyColor,
                                           fontSize: 11,
                                         ),
@@ -189,7 +189,7 @@ class HistoriCardWidget extends StatelessWidget {
                                       ),
                                       Text(
                                         '4.5',
-                                        style: mediumBaseFont.copyWith(
+                                        style: fontTheme.bodyText2?.copyWith(
                                           color: darkGreyColor,
                                           fontSize: 11,
                                         ),
@@ -210,7 +210,7 @@ class HistoriCardWidget extends StatelessWidget {
                                   padding: const EdgeInsets.only(left: 2.0, right: 2.0),
                                   child: Text(
                                     "10:00 - 11:00",
-                                    style: mediumBaseFont.copyWith(
+                                    style: fontTheme.bodyText2?.copyWith(
                                       color: greyColor,
                                       fontSize: 11,
                                     ),

@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Halo Psikiater',
-        theme: ThemeData(textTheme: myTextTheme, primarySwatch: Colors.blue, visualDensity: VisualDensity.adaptivePlatformDensity),
+        theme: ThemeData(textTheme: fontTheme, primarySwatch: Colors.blue, visualDensity: VisualDensity.adaptivePlatformDensity),
         initialRoute: SplashScreenPage.routeName,
         routes: {
           SplashScreenPage.routeName: (context) => SplashScreenPage(),

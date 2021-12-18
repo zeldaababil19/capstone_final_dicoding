@@ -66,11 +66,11 @@ class _NavBarWidgetState extends State<NavBarWidget> {
             onTap: (index) {
               navigation.changeIndex(index);
             },
-            selectedLabelStyle: mediumBaseFont.copyWith(
+            selectedLabelStyle: fontTheme.bodyText2?.copyWith(
               color: accentColor,
               fontSize: 10,
             ),
-            unselectedLabelStyle: mediumBaseFont.copyWith(
+            unselectedLabelStyle: fontTheme.bodyText2?.copyWith(
               color: navInactiveColor,
               fontSize: 10,
             ),

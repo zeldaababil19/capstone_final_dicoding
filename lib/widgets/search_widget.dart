@@ -15,14 +15,14 @@ class SearchBoxField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: con,
-      style: regularBaseFont.copyWith(
+      style: fontTheme.bodyText2?.copyWith(
         color: darkGreyColor,
         fontSize: 13,
         // decoration: TextDecoration.none,
       ),
       decoration: InputDecoration(
         hintText: placeholder,
-        hintStyle: regularBaseFont.copyWith(
+        hintStyle: fontTheme.bodyText2?.copyWith(
           color: lightGreyColor,
           fontSize: 13,
         ),
@@ -45,4 +45,3 @@ class SearchBoxField extends StatelessWidget {
     );
   }
 }
-

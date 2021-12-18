@@ -66,7 +66,7 @@ class JadwalCardWidget extends StatelessWidget {
                                             ),
                                             Text(
                                               "10:00 - 11:00",
-                                              style: mediumBaseFont.copyWith(
+                                              style: fontTheme.bodyText2?.copyWith(
                                                 color: greyColor,
                                                 fontSize: 11,
                                               ),
@@ -88,14 +88,14 @@ class JadwalCardWidget extends StatelessWidget {
                                       children: [
                                         Text(
                                           '25',
-                                          style: mediumBaseFont.copyWith(
+                                          style: fontTheme.bodyText2?.copyWith(
                                             color: whiteColor,
                                             fontSize: 12,
                                           ),
                                         ),
                                         Text(
                                           'Kam',
-                                          style: mediumBaseFont.copyWith(
+                                          style: fontTheme.bodyText2?.copyWith(
                                             color: whiteColor,
                                             fontSize: 12,
                                           ),
@@ -123,7 +123,7 @@ class JadwalCardWidget extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       'Pembatalan tersedia 30 menit sebelum konsultasi',
-                                      style: mediumBaseFont.copyWith(
+                                      style: fontTheme.bodyText2?.copyWith(
                                         color: greyColor,
                                         fontSize: 8,
                                       ),
