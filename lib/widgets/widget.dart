@@ -19,3 +19,4 @@ part 'card_jadwal_widget.dart';
 part 'loader_widget.dart';
 part 'card_histori_widget.dart';
 part 'myBooking_List_widget.dart';
+part 'update_profile.dart';
