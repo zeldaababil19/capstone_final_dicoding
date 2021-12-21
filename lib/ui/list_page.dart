@@ -69,13 +69,23 @@ class _ListPageState extends State<ListPage> {
       () {
         if (_searchIcon.icon == Icons.search) {
           _searchIcon = Icon(Icons.close);
-          _appBar = TextField(
+          _appBar = TextFormField(
             controller: _psikiaterController,
             cursorColor: Colors.white,
-            decoration: InputDecoration(hintText: 'Cari nama Psikiater'),
+            decoration: InputDecoration(
+              hintText: 'Cari nama Psikiater',
+            ),
             onChanged: (query) => {
               if (query != '')
                 {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchList(
+                        searchKey: query,
+                      ),
+                    ),
+                  ),
                   // provider.getRestaurantSearch(query),
                 }
             },

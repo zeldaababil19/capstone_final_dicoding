@@ -1,4 +1,4 @@
-alamat : "Jember"
+address : "Jember"
 bidang : "Psikologi Klinis"
 nama : "Erni putri Setyadji, M.Psi,"
 pengalaman : "7 tahun"

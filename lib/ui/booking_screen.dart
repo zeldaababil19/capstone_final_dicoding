@@ -1,9 +1,10 @@
 part of 'ui.dart';
 
 class BookingScreen extends StatefulWidget {
-  final String psikiater;
+  final String psikiaterName;
+  final String psikiaterEmail;
 
-  const BookingScreen({Key? key, required this.psikiater}) : super(key: key);
+  const BookingScreen({Key? key, required this.psikiaterName, required this.psikiaterEmail}) : super(key: key);
   @override
   _BookingScreenState createState() => _BookingScreenState();
 }
@@ -13,38 +14,60 @@ class _BookingScreenState extends State<BookingScreen> {
   CalendarClient calendarClient = CalendarClient();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _psikiaterController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _timeStartController = TextEditingController();
-  final TextEditingController _timeEndController = TextEditingController();
-  final TextEditingController _attendeeController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
 
   FocusNode f1 = FocusNode();
   FocusNode f2 = FocusNode();
-  FocusNode f3 = FocusNode();
-  FocusNode f4 = FocusNode();
-  FocusNode f5 = FocusNode();
-  FocusNode f6 = FocusNode();
-  FocusNode f7 = FocusNode();
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedStartTime = TimeOfDay.now();
-  TimeOfDay selectedEndTime = TimeOfDay.now();
-  String timeText = 'Pilih jam';
+  TimeOfDay currentTime = TimeOfDay.now();
+  String timeText = 'Select Time';
   late String dateUTC;
-  late String date_Start_Time;
-  late String date_End_Time;
+  late String date_Time;
+  late String joiningLink = "https://meet.google.com/";
+  late String eventId;
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  // eventId = value.id;
+  // joiningLink = "https://meet.google.com/${value.conferenceData.conferenceId}";
+
+  late String currentTitle = 'Halo Psikiater ' + widget.psikiaterName;
+  late String currentDesc = 'Konsultasi dengan pasien ' + user.displayName!;
+  late String psikiaterEmail = widget.psikiaterEmail;
+  late String psikiaterName = widget.psikiaterName;
+  late String pasienEmail = user.email!;
+  late String pasienName = user.displayName!;
+  late String pasienPhone = user.phoneNumber!;
+  late String errorString = '';
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   late User user;
 
   Future<void> _getUser() async {
     user = _auth.currentUser!;
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUser();
+    selectTime(context);
+  }
+
+  // _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedDate,
+  //     firstDate: DateTime(2020),
+  //     lastDate: DateTime(2050),
+  //   );
+  //   if (picked != null && picked != selectedDate) {
+  //     setState(() {
+  //       selectedDate = picked;
+  //       _dateController.text = DateFormat.yMMMMd().format(selectedDate);
+  //     });
+  //   }
+  // }
 
   Future<void> selectDate(BuildContext context) async {
     showDatePicker(
@@ -59,70 +82,69 @@ class _BookingScreenState extends State<BookingScreen> {
             selectedDate = date!;
             String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
             _dateController.text = formattedDate;
-            dateUTC = DateFormat('dd-MM-yyyy').format(selectedDate);
+            dateUTC = DateFormat('yyyy-MM-dd').format(selectedDate);
           },
         );
       },
     );
   }
 
-  // Future<void> selectTime(BuildContext context) async {
-  //   TimeOfDay selectedTime = await showTimePicker(
+  Future<void> selectTime(BuildContext context) async {
+    TimeOfDay? selectedTime = await showTimePicker(
+      context: context,
+      initialTime: currentTime,
+    );
+
+    MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    String formattedTime = localizations.formatTimeOfDay(selectedTime!, alwaysUse24HourFormat: false);
+
+    if (formattedTime != null) {
+      setState(() {
+        timeText = formattedTime;
+        _timeController.text = timeText;
+      });
+    }
+    date_Time = selectedTime.toString().substring(10, 15);
+  }
+  // _selectStartTime(BuildContext context) async {
+  //   final TimeOfDay? picked = await showTimePicker(
   //     context: context,
-  //     initialTime: currentTime,
+  //     initialTime: selectedStartTime,
   //   );
-
-  //   MaterialLocalizations localizations = MaterialLocalizations.of(context);
-  //   String formattedTime = localizations.formatTimeOfDay(selectedTime, alwaysUse24HourFormat: false);
-
-  //   if (formattedTime != null) {
+  //   if (picked != null && picked != selectedStartTime) {
   //     setState(() {
-  //       timeText = formattedTime;
-  //       _timeController.text = timeText;
+  //       selectedStartTime = picked;
+  //       _timeStartController.text = selectedStartTime.format(context);
+  //     });
+  //   } else {
+  //     setState(() {
+  //       _timeStartController.text = selectedStartTime.format(context);
   //     });
   //   }
-  //   date_Time = selectedTime.toString().substring(10, 15);
   // }
 
-  Future<void> _selectStartTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedStartTime,
-    );
-    MaterialLocalizations localizations = MaterialLocalizations.of(context);
-    String formattedTime = localizations.formatTimeOfDay(picked!, alwaysUse24HourFormat: false);
-
-    if (formattedTime != null) {
-      setState(() {
-        timeText = formattedTime;
-        _timeStartController.text = timeText;
-      });
-    }
-    date_Start_Time = picked.toString().substring(10, 15);
-  }
-
-  Future<void> _selectEndTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedEndTime,
-    );
-    MaterialLocalizations localizations = MaterialLocalizations.of(context);
-    String formattedTime = localizations.formatTimeOfDay(picked!, alwaysUse24HourFormat: false);
-
-    if (formattedTime != null) {
-      setState(() {
-        timeText = formattedTime;
-        _timeEndController.text = timeText;
-      });
-    }
-    date_End_Time = picked.toString().substring(10, 15);
-  }
-
+  // _selectEndTime(BuildContext context) async {
+  //   final TimeOfDay? picked = await showTimePicker(
+  //     context: context,
+  //     initialTime: selectedEndTime,
+  //   );
+  //   if (picked != null && picked != selectedEndTime) {
+  //     setState(() {
+  //       selectedEndTime = picked;
+  //       _timeEndController.text = selectedEndTime.format(context);
+  //     });
+  //   } else {
+  //     setState(() {
+  //       _timeEndController.text = selectedEndTime.format(context);
+  //     });
+  //   }
+  // }
   showAlertDialog(BuildContext context) {
+    // set up the button
     Widget okButton = TextButton(
       child: Text(
         "OK",
-        style: fontTheme.bodyText1!.copyWith(color: Colors.blue),
+        style: GoogleFonts.lato(fontWeight: FontWeight.bold),
       ),
       onPressed: () {
         Navigator.pushReplacement(
@@ -136,15 +158,19 @@ class _BookingScreenState extends State<BookingScreen> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Berhasil", style: fontTheme.bodyText1),
+      title: Text(
+        "Done!",
+        style: GoogleFonts.lato(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       content: Text(
-        "Jadwal berhasil dibuat",
-        style: fontTheme.bodyText1!.copyWith(color: Colors.grey),
+        "Appointment is registered.",
+        style: GoogleFonts.lato(),
       ),
       actions: [
         okButton,
       ],
-      backgroundColor: baseColor,
     );
 
     // show the dialog
@@ -157,19 +183,9 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _getUser();
-    _selectEndTime(context);
-    _selectStartTime(context);
-    _psikiaterController.text = widget.psikiater;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      key: _scaffoldKey,
+      backgroundColor: baseColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -182,359 +198,418 @@ class _BookingScreenState extends State<BookingScreen> {
         ),
       ),
       body: SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Form(
-              key: _formKey,
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 12),
-                padding: EdgeInsets.only(top: 0),
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Detail Pasien', style: fontTheme.subtitle1),
-                    ),
-                    TextFormField(
-                      controller: _nameController,
-                      focusNode: f1,
-                      validator: (value) {
-                        if (value!.isEmpty) return 'Masukkan Nama Pasien';
-                        return null;
-                      },
-                      style: fontTheme.bodyText1,
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                            borderSide: BorderSide.none,
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance.collection('psikiaters').orderBy('name').startAt([widget.psikiaterName]).endAt([widget.psikiaterName + '\uf8ff']).snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return ListView.builder(
+                itemCount: snapshot.data!.size,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot document = snapshot.data!.docs[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(children: [
+                      Row(children: [
+                        Container(
+                          height: 100,
+                          width: 100,
+                          child: CachedNetworkImage(
+                            imageUrl: document['image'],
+                            fit: BoxFit.cover,
+                            height: 95,
+                            width: 95,
+                            imageBuilder: (context, image) => CircleAvatar(
+                              backgroundImage: image,
+                              radius: 5,
+                            ),
                           ),
-                          filled: true,
-                          fillColor: Colors.grey[350],
-                          hintText: 'Nama Pasien',
-                          hintStyle: fontTheme.bodyText1!.copyWith(color: Colors.grey)),
-                      onFieldSubmitted: (String value) {
-                        f1.unfocus();
-                        FocusScope.of(context).requestFocus(f2);
-                      },
-                      textInputAction: TextInputAction.next,
-                    ),
-                    SizedBox(height: 6),
-                    TextFormField(
-                      keyboardType: TextInputType.phone,
-                      focusNode: f2,
-                      controller: _phoneController,
-                      style: fontTheme.bodyText1,
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey[350],
-                          hintText: 'Nomor Hp',
-                          hintStyle: fontTheme.bodyText1!.copyWith(color: Colors.grey)),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Masukkan Nomor Hp';
-                        } else if (value.length < 10) {
-                          return 'Masukkan Nomor Hp dengan benar';
-                        }
-                        return null;
-                      },
-                      onFieldSubmitted: (String value) {
-                        f2.unfocus();
-                        FocusScope.of(context).requestFocus(f3);
-                      },
-                      textInputAction: TextInputAction.next,
-                    ),
-                    SizedBox(height: 6),
-                    TextFormField(
-                      focusNode: f3,
-                      controller: _descriptionController,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      style: fontTheme.bodyText1,
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey[350],
-                          hintText: 'Deskripsi',
-                          hintStyle: fontTheme.bodyText1!.copyWith(color: Colors.grey)),
-                      onFieldSubmitted: (String value) {
-                        f3.unfocus();
-                        FocusScope.of(context).requestFocus(f4);
-                      },
-                      textInputAction: TextInputAction.next,
-                    ),
-                    SizedBox(height: 6),
-                    TextFormField(
-                      controller: _psikiaterController,
-                      validator: (value) {
-                        if (value!.isEmpty) return 'Masukkan Nama Psikiater';
-                        return null;
-                      },
-                      style: fontTheme.bodyText1,
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey[350],
-                          hintText: 'Nama Psikiater',
-                          hintStyle: fontTheme.bodyText1!.copyWith(color: Colors.grey)),
-                    ),
-                    SizedBox(height: 6),
-                    Container(
-                      alignment: Alignment.center,
-                      height: 60,
-                      width: MediaQuery.of(context).size.width,
-                      child: Stack(
-                        alignment: Alignment.centerRight,
-                        children: [
-                          TextFormField(
-                            focusNode: f4,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                  left: 10,
-                                  top: 10,
-                                  bottom: 10,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3),
+                            )
+                          ]),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              Text(document['name'],
+                                  style: fontTheme.subtitle1?.copyWith(
+                                    color: blackColor,
+                                  )),
+                              Text(document['spesialis'], style: fontTheme.bodyText2),
+                              Row(children: [
+                                Icon(
+                                  Icons.business_center,
+                                  size: 16,
+                                  color: Colors.grey,
                                 ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                  borderSide: BorderSide.none,
+                                SizedBox(width: 2),
+                                Text(
+                                  document['experience'],
+                                  style: fontTheme.bodyText2?.copyWith(
+                                    // color: darkGreyColor,
+                                    fontSize: 12,
+                                  ),
+                                )
+                              ]),
+                              Row(children: [
+                                Icon(
+                                  Icons.star,
+                                  size: 16,
+                                  color: Colors.grey,
                                 ),
-                                filled: true,
-                                fillColor: Colors.grey[350],
-                                hintText: 'Pilih tanggal',
-                                hintStyle: fontTheme.bodyText1!.copyWith(color: Colors.grey)),
-                            controller: _dateController,
-                            validator: (value) {
-                              if (value!.isEmpty) return 'Masukkan tanggal';
-                              return null;
-                            },
-                            onFieldSubmitted: (String value) {
-                              f4.unfocus();
-                              FocusScope.of(context).requestFocus(f5);
-                            },
-                            textInputAction: TextInputAction.next,
-                            style: fontTheme.bodyText1,
+                                SizedBox(width: 2),
+                                Text(
+                                  document['rating'].toString(),
+                                  style: fontTheme.bodyText2?.copyWith(
+                                    // color: darkGreyColor,
+                                    fontSize: 12,
+                                  ),
+                                )
+                              ])
+                            ]),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5.0),
-                            child: ClipOval(
-                              child: Material(
-                                color: Colors.blue, // button color
-                                child: InkWell(
-                                  // inkwell color
-                                  child: SizedBox(
-                                    width: 40,
-                                    height: 40,
-                                    child: Icon(
-                                      Icons.date_range_outlined,
-                                      color: Colors.white,
+                        )
+                      ]),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Container(
+                          width: 250,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 4.0, right: 4.0, top: 2.0, bottom: 2.0),
+                            child: Row(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 25,
+                                  child: Icon(Icons.info, color: greyColor),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    'Pembatalan tersedia 30 menit sebelum konsultasi',
+                                    style: fontTheme.bodyText2?.copyWith(
+                                      color: greyColor,
+                                      fontSize: 8,
                                     ),
                                   ),
-                                  onTap: () {
-                                    selectDate(context);
-                                  },
                                 ),
-                              ),
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    Container(
-                      alignment: Alignment.center,
-                      height: 60,
-                      width: MediaQuery.of(context).size.width,
-                      child: Stack(
-                        alignment: Alignment.centerRight,
-                        children: [
-                          TextFormField(
-                            focusNode: f5,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                  left: 10,
-                                  top: 10,
-                                  bottom: 10,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                  borderSide: BorderSide.none,
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[350],
-                                hintText: 'Pilih jam awal',
-                                hintStyle: fontTheme.bodyText1!.copyWith(color: Colors.grey)),
-                            controller: _timeStartController,
-                            validator: (value) {
-                              if (value!.isEmpty) return 'Pilih jam awal';
-                              return null;
-                            },
-                            onFieldSubmitted: (String value) {
-                              f5.unfocus();
-                              FocusScope.of(context).requestFocus(f6);
-                            },
-                            textInputAction: TextInputAction.next,
-                            style: fontTheme.bodyText1,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5.0),
-                            child: ClipOval(
-                              child: Material(
-                                color: Colors.blue, // button color
-                                child: InkWell(
-                                  // inkwell color
-                                  child: SizedBox(
-                                    width: 40,
-                                    height: 40,
-                                    child: Icon(
-                                      Icons.timer_outlined,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    _selectStartTime(context);
-                                  },
-                                ),
-                              ),
+                          decoration: BoxDecoration(
+                            color: redAlertColor,
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                              color: redAlertboderColor,
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      height: 60,
-                      width: MediaQuery.of(context).size.width,
-                      child: Stack(
-                        alignment: Alignment.centerRight,
-                        children: [
-                          TextFormField(
-                            focusNode: f6,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                  left: 10,
-                                  top: 10,
-                                  bottom: 10,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                  borderSide: BorderSide.none,
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[350],
-                                hintText: 'Pilih jam akhir',
-                                hintStyle: fontTheme.bodyText1!.copyWith(color: Colors.grey)),
-                            controller: _timeEndController,
-                            validator: (value) {
-                              if (value!.isEmpty) return 'Pilih jam akhir';
-                              return null;
-                            },
-                            onFieldSubmitted: (String value) {
-                              f6.unfocus();
-                            },
-                            textInputAction: TextInputAction.next,
-                            style: fontTheme.bodyText1,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5.0),
-                            child: ClipOval(
-                              child: Material(
-                                color: Colors.blue, // button color
-                                child: InkWell(
-                                  // inkwell color
-                                  child: SizedBox(
-                                    width: 40,
-                                    height: 40,
-                                    child: Icon(
-                                      Icons.timer_outlined,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    _selectEndTime(context);
-                                  },
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    Container(
-                      height: 50,
-                      width: MediaQuery.of(context).size.width,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 2,
-                          primary: Colors.blue,
-                          onPrimary: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32.0),
                           ),
                         ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            print(_nameController.text);
-                            print(_dateController.text);
-                            print(widget.psikiater);
-                            showAlertDialog(context);
-                            _createAppointment();
-                          }
-                        },
-                        child: Text("Buat Jadwal", style: fontTheme.bodyText1),
                       ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: whiteColor,
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                              color: accentColor,
+                            ),
+                          ),
+                          child: Form(
+                            key: _formKey,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                Text(
+                                  'Detail Booking',
+                                  style: fontTheme.subtitle1?.copyWith(
+                                    color: blackColor,
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  'Tanggal',
+                                  style: fontTheme.subtitle1?.copyWith(
+                                    color: blackColor,
+                                  ),
+                                ),
+                                SizedBox(height: 2),
+                                Container(
+                                  alignment: Alignment.center,
+                                  height: 60,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Stack(
+                                    alignment: Alignment.centerRight,
+                                    children: [
+                                      TextFormField(
+                                        focusNode: f1,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.only(
+                                            left: 20,
+                                            top: 10,
+                                            bottom: 10,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(90.0)),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.grey[350],
+                                          hintText: 'Select Date*',
+                                          hintStyle: GoogleFonts.lato(
+                                            color: Colors.black26,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                        controller: _dateController,
+                                        validator: (value) {
+                                          if (value!.isEmpty) return 'Please Enter the Date';
+                                          return null;
+                                        },
+                                        onFieldSubmitted: (String value) {
+                                          f1.unfocus();
+                                          FocusScope.of(context).requestFocus(f2);
+                                        },
+                                        textInputAction: TextInputAction.next,
+                                        style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 5.0),
+                                        child: ClipOval(
+                                          child: Material(
+                                            color: Colors.indigo, // button color
+                                            child: InkWell(
+                                              // inkwell color
+                                              child: SizedBox(
+                                                width: 40,
+                                                height: 40,
+                                                child: Icon(
+                                                  Icons.date_range_outlined,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                selectDate(context);
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  height: 60,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Stack(
+                                    alignment: Alignment.centerRight,
+                                    children: [
+                                      TextFormField(
+                                        focusNode: f2,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.only(
+                                            left: 20,
+                                            top: 10,
+                                            bottom: 10,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(90.0)),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.grey[350],
+                                          hintText: 'Select Time*',
+                                          hintStyle: GoogleFonts.lato(
+                                            color: Colors.black26,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                        controller: _timeController,
+                                        validator: (value) {
+                                          if (value!.isEmpty) return 'Please Enter the Time';
+                                          return null;
+                                        },
+                                        onFieldSubmitted: (String value) {
+                                          f2.unfocus();
+                                        },
+                                        textInputAction: TextInputAction.next,
+                                        style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 5.0),
+                                        child: ClipOval(
+                                          child: Material(
+                                            color: Colors.indigo, // button color
+                                            child: InkWell(
+                                              // inkwell color
+                                              child: SizedBox(
+                                                width: 40,
+                                                height: 40,
+                                                child: Icon(
+                                                  Icons.timer_outlined,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                selectTime(context);
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Container(
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 2,
+                                        primary: Colors.indigo,
+                                        onPrimary: Colors.black,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(32.0),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          print(_dateController.text);
+                                          print(_timeController.text);
+                                          print(widget.psikiaterName);
+                                          print(user.displayName);
+                                          _createAppointment();
+                                          // showAlertDialog(context);
+                                        }
+                                      },
+                                      child: Text(
+                                        "Book Appointment",
+                                        style: GoogleFonts.lato(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  // child: Container(
+                                  //   width: double.maxFinite,
+                                  //   child: ElevatedButton(
+                                  //     onPressed: () {
+                                  //       if (_formKey.currentState!.validate()) {
+                                  //         print(_dateController.text);
+                                  //         print(_timeController.text);
+                                  //         print(widget.psikiaterName);
+                                  //         print(user.displayName);
+                                  //         _createAppointment();
+                                  //       }
+                                  //     },
+                                  //     child: Text(
+                                  //       "Booking Psikiater",
+                                  //       style: GoogleFonts.lato(
+                                  //         color: Colors.white,
+                                  //         fontSize: 18,
+                                  //         fontWeight: FontWeight.bold,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                ),
+                              ]),
+                            ),
+                          ),
+                        ),
+                      )
+                    ]),
+                  );
+                },
+              );
+            }),
       ),
     );
   }
 
   Future<void> _createAppointment() async {
-    print(dateUTC + ' ' + 'Start at ' + date_Start_Time + ':00' + 'End at ' + date_End_Time + ':00');
+    // String calendarId = "primary";
+    // calendar.Event event = calendar.Event();
+
+    // event.summary = currentTitle;
+    // event.description = currentDesc;
+    // // event.attendees = attendeeEmailList;
+
+    // // if (hasConferenceSupport) {
+    // calendar.ConferenceData conferenceData = calendar.ConferenceData();
+    // calendar.CreateConferenceRequest conferenceRequest = calendar.CreateConferenceRequest();
+    // conferenceRequest.requestId = "${date_Time}";
+    // conferenceData.createRequest = conferenceRequest;
+
+    // event.conferenceData = conferenceData;
+    // // }
+
+    // calendar.EventDateTime start = calendar.EventDateTime();
+    // start.dateTime = date_Time as DateTime?;
+    // start.timeZone = "GMT+05:30";
+    // event.start = start;
+
+    // EventDateTime end = new EventDateTime();
+    // end.timeZone = "GMT+05:30";
+    // end.dateTime = endTime;
+    // event.end = end;
+
+    // try {
+    //   await calendar.events.insert(event, calendarId, conferenceDataVersion: 1, sendUpdates: "all").then((value) {
+    //     print("Event Status: ${value.status}");
+    //     if (value.status == "confirmed") {
+    //       // String joiningLink;
+    //       // String eventId;
+
+    //       eventId = value.id;
+    //       joiningLink = "https://meet.google.com/${value.conferenceData.conferenceId}";
+
+    //       eventData = {'id': eventId, 'link': joiningLink};
+
+    //       print('Event added to Google Calendar');
+    //     } else {
+    //       print("Unable to add event to Google Calendar");
+    //     }
+    //   });
+    // } catch (e) {
+    //   print('Error creating event $e');
+    // }
+
+    print(dateUTC + ' ' + date_Time + ':00');
     FirebaseFirestore.instance.collection('booking').doc(user.email).collection('pending').doc().set({
-      'name': _nameController.text,
-      'phone': _phoneController.text,
-      'description': _descriptionController.text,
-      'psikiater': _psikiaterController.text,
-      'date': DateTime.parse(dateUTC + ' ' + 'Start at ' + date_Start_Time + ':00' + ' End at ' + date_End_Time + ':00'),
+      // 'id': eventId,
+      'link': joiningLink,
+      'name': currentTitle,
+      'description': currentDesc,
+      'psikiaterEmail': psikiaterEmail,
+      'date': DateTime.parse(dateUTC + ' ' + date_Time + ':00'),
     }, SetOptions(merge: true));
 
     FirebaseFirestore.instance.collection('booking').doc(user.email).collection('all').doc().set({
-      'name': _nameController.text,
-      'phone': _phoneController.text,
-      'description': _descriptionController.text,
-      'psikiater': _psikiaterController.text,
-      'date': DateTime.parse(dateUTC + ' ' + 'Start at ' + date_Start_Time + ':00' + ' End at ' + date_End_Time + ':00'),
+      // 'id': eventId,
+      'link': joiningLink,
+      'name': currentTitle,
+      'description': currentDesc,
+      'psikiaterEmail': psikiaterEmail,
+      'date': DateTime.parse(dateUTC + ' ' + date_Time + ':00'),
     }, SetOptions(merge: true));
   }
 }

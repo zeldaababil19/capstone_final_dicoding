@@ -1,6 +1,6 @@
 part of 'util.dart';
 
 class Secret {
-  static const ANDROID_CLIENT_ID = "389215821819-vaoo8jsmfabjoieoq4gs3h7k6md5snuo.apps.googleusercontent.com";
+  static const ANDROID_CLIENT_ID = "389215821819-0i3ed9vl37gbh5qc3ro5hhn50q2k017e.apps.googleusercontent.com";
   static String getId() => Secret.ANDROID_CLIENT_ID;
 }

@@ -20,17 +20,17 @@ part of 'ui.dart';
 //     'Jenis Kelamin',
 //     'Nomor HandPhone',
 //     'Tanggal Lahir',
-//     'Alamat',
+//     'address',
 //   ];
 
 //   List value = [
 //     'image',
 //     'name',
 //     'email',
-//     'jekel',
-//     'noHp',
-//     'tgl',
-//     'alamat',
+//     'gender',
+//     'phone',
+//     'birthDate',
+//     'address',
 //   ];
 
 //   @override

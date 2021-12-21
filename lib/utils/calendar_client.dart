@@ -7,7 +7,6 @@ class CalendarClient {
   Future<Map<String, String>> insert({
     required String title,
     required String description,
-    required String location,
     required List<EventAttendee> attendeeEmailList,
     required bool shouldNotifyAttendees,
     required bool hasConferenceSupport,
@@ -22,7 +21,6 @@ class CalendarClient {
     event.summary = title;
     event.description = description;
     event.attendees = attendeeEmailList;
-    event.location = location;
 
     if (hasConferenceSupport) {
       ConferenceData conferenceData = ConferenceData();

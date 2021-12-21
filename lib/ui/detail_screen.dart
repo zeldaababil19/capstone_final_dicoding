@@ -168,7 +168,7 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('Alamat', style: fontTheme.bodyText1),
+                                      Text('address', style: fontTheme.bodyText1),
                                       Text(document['address']),
                                     ],
                                   ),
@@ -249,11 +249,18 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => BookingScreen(
-                                        psikiater: document['name'],
-                                      ),
+                                      builder: (context) => BookingFakeScreen(),
                                     ),
                                   );
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => BookingScreen(
+                                  //       psikiaterName: document['name'],
+                                  //       psikiaterEmail: document['email'],
+                                  //     ),
+                                  //   ),
+                                  // );
                                 },
                                 child: Text(
                                   'Buat Jadwal Meet',
@@ -285,7 +292,6 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
             );
           },
         ),
-      
       ),
     );
   }

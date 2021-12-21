@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:capstone_final/models/model.dart';
 import 'package:capstone_final/providers/provider.dart';
 import 'package:capstone_final/services/service.dart';
 import 'package:capstone_final/shared/shared.dart';
@@ -13,7 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:googleapis/calendar/v3.dart' as cal;
+import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:splashscreen/splashscreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,7 +28,9 @@ part 'histori_screen.dart';
 part 'register_screen.dart';
 part 'booking_screen.dart';
 part 'detail_screen.dart';
-part 'mybooking_screen.dart';
 part 'profile_setting_ui.dart';
 part 'userProfile_detail.dart';
 part 'setting_ui.dart';
+part 'mybooking_screen.dart';
+part 'booking_fake_screen.dart';
+part 'search_screen.dart';

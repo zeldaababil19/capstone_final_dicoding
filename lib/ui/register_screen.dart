@@ -278,9 +278,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     showLoaderDialog(context);
                                     _registerAccount();
                                     var _clientID = ClientId(Secret.getId(), "");
-                                    const _scopes = [cal.CalendarApi.calendarScope];
+                                    const _scopes = [calendar.CalendarApi.calendarScope];
                                     await clientViaUserConsent(_clientID, _scopes, prompt).then((AuthClient client) async {
-                                      CalendarClient.calendar = cal.CalendarApi(client);
+                                      CalendarClient.calendar = calendar.CalendarApi(client);
                                     });
                                   }
                                 },
@@ -431,12 +431,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
       FirebaseFirestore.instance.collection('pasiens').doc(user.uid).set({
         'name': _nameController.text,
-        'tgl': null,
+        'birthDate': null,
         'email': user.email,
-        'noHp': null,
-        'alamat': null,
+        'phone': null,
+        'address': null,
         'image': null,
-        'jekel': null,
+        'gender': null,
       }, SetOptions(merge: true));
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
