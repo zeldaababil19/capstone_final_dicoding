@@ -14,22 +14,15 @@ class _BookingScreenState extends State<BookingScreen> {
   CalendarClient calendarClient = CalendarClient();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
-
-  FocusNode f1 = FocusNode();
-  FocusNode f2 = FocusNode();
+  late TextEditingController textControllerDate;
+  late TextEditingController textControllerStartTime;
+  late TextEditingController textControllerEndTime;
 
   DateTime selectedDate = DateTime.now();
-  TimeOfDay currentTime = TimeOfDay.now();
-  String timeText = 'Select Time';
-  late String dateUTC;
-  late String date_Time;
-  late String joiningLink = "https://meet.google.com/";
-  late String eventId;
+  TimeOfDay selectedStartTime = TimeOfDay.now();
+  TimeOfDay selectedEndTime = TimeOfDay.now();
 
-  // eventId = value.id;
-  // joiningLink = "https://meet.google.com/${value.conferenceData.conferenceId}";
+  static const _scopes = [calendar.CalendarApi.calendarScope];
 
   late String currentTitle = 'Halo Psikiater ' + widget.psikiaterName;
   late String currentDesc = 'Konsultasi dengan pasien ' + user.displayName!;
@@ -39,6 +32,19 @@ class _BookingScreenState extends State<BookingScreen> {
   late String pasienName = user.displayName!;
   late String pasienPhone = user.phoneNumber!;
   late String errorString = '';
+  List<calendar.EventAttendee> attendeeEmails = [];
+  // var fixedLengthList = List<String>.filled(1, '${psikiaterEmail}');
+  // var attendeeEmails = List.filled(1, []) as List<calendar.EventAttendee>;
+  // var shared = List.filled(3, []);
+
+  bool isEditingDate = false;
+  bool isEditingStartTime = false;
+  bool isEditingEndTime = false;
+  bool isEditingEmail = false;
+  bool isEditingLink = false;
+  bool isErrorTime = false;
+  bool shouldNofityAttendees = true;
+  bool hasConferenceSupport = true;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late User user;
@@ -50,95 +56,108 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   void initState() {
     super.initState();
+    calendar.EventAttendee eventAttendee = new calendar.EventAttendee();
+    eventAttendee.email = psikiaterEmail;
+    attendeeEmails.add(eventAttendee);
     _getUser();
-    selectTime(context);
+    textControllerDate = TextEditingController();
+    textControllerStartTime = TextEditingController();
+    textControllerEndTime = TextEditingController();
+
+    // attendeeEmails[0].add(psikiaterEmail);
+
+//ini yang masalah
+    // calendar.EventAttendee eventAttendee = new calendar.EventAttendee();
+    // eventAttendee.email = psikiaterEmail;
+    // attendeeEmails.add(eventAttendee);
   }
 
-  // _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: selectedDate,
-  //     firstDate: DateTime(2020),
-  //     lastDate: DateTime(2050),
-  //   );
-  //   if (picked != null && picked != selectedDate) {
-  //     setState(() {
-  //       selectedDate = picked;
-  //       _dateController.text = DateFormat.yMMMMd().format(selectedDate);
-  //     });
-  //   }
-  // }
-
-  Future<void> selectDate(BuildContext context) async {
-    showDatePicker(
+  _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2021),
-      lastDate: DateTime(2025),
-    ).then(
-      (date) {
-        setState(
-          () {
-            selectedDate = date!;
-            String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
-            _dateController.text = formattedDate;
-            dateUTC = DateFormat('yyyy-MM-dd').format(selectedDate);
-          },
-        );
-      },
+      initialDate: selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2050),
     );
-  }
-
-  Future<void> selectTime(BuildContext context) async {
-    TimeOfDay? selectedTime = await showTimePicker(
-      context: context,
-      initialTime: currentTime,
-    );
-
-    MaterialLocalizations localizations = MaterialLocalizations.of(context);
-    String formattedTime = localizations.formatTimeOfDay(selectedTime!, alwaysUse24HourFormat: false);
-
-    if (formattedTime != null) {
+    if (picked != null && picked != selectedDate) {
       setState(() {
-        timeText = formattedTime;
-        _timeController.text = timeText;
+        selectedDate = picked;
+        textControllerDate.text = DateFormat.yMMMMd().format(selectedDate);
       });
     }
-    date_Time = selectedTime.toString().substring(10, 15);
   }
-  // _selectStartTime(BuildContext context) async {
-  //   final TimeOfDay? picked = await showTimePicker(
+
+  // Future<void> selectDate(BuildContext context) async {
+  //   showDatePicker(
   //     context: context,
-  //     initialTime: selectedStartTime,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(2021),
+  //     lastDate: DateTime(2025),
+  //   ).then(
+  //     (date) {
+  //       setState(
+  //         () {
+  //           selectedDate = date!;
+  //           String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
+  //           _dateController.text = formattedDate;
+  //           dateUTC = DateFormat('yyyy-MM-dd').format(selectedDate);
+  //         },
+  //       );
+  //     },
   //   );
-  //   if (picked != null && picked != selectedStartTime) {
-  //     setState(() {
-  //       selectedStartTime = picked;
-  //       _timeStartController.text = selectedStartTime.format(context);
-  //     });
-  //   } else {
-  //     setState(() {
-  //       _timeStartController.text = selectedStartTime.format(context);
-  //     });
-  //   }
   // }
 
-  // _selectEndTime(BuildContext context) async {
-  //   final TimeOfDay? picked = await showTimePicker(
+  // Future<void> selectTime(BuildContext context) async {
+  //   TimeOfDay? selectedTime = await showTimePicker(
   //     context: context,
-  //     initialTime: selectedEndTime,
+  //     initialTime: currentTime,
   //   );
-  //   if (picked != null && picked != selectedEndTime) {
+
+  //   MaterialLocalizations localizations = MaterialLocalizations.of(context);
+  //   String formattedTime = localizations.formatTimeOfDay(selectedTime!, alwaysUse24HourFormat: false);
+
+  //   if (formattedTime != null) {
   //     setState(() {
-  //       selectedEndTime = picked;
-  //       _timeEndController.text = selectedEndTime.format(context);
-  //     });
-  //   } else {
-  //     setState(() {
-  //       _timeEndController.text = selectedEndTime.format(context);
+  //       timeText = formattedTime;
+  //       _timeController.text = timeText;
   //     });
   //   }
+  //   date_Time = selectedTime.toString().substring(10, 15);
   // }
+  _selectStartTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedStartTime,
+    );
+    if (picked != null && picked != selectedStartTime) {
+      setState(() {
+        selectedStartTime = picked;
+        textControllerStartTime.text = selectedStartTime.format(context);
+      });
+    } else {
+      setState(() {
+        textControllerStartTime.text = selectedStartTime.format(context);
+      });
+    }
+  }
+
+  _selectEndTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedEndTime,
+    );
+    if (picked != null && picked != selectedEndTime) {
+      setState(() {
+        selectedEndTime = picked;
+        textControllerEndTime.text = selectedEndTime.format(context);
+      });
+    } else {
+      setState(() {
+        textControllerEndTime.text = selectedEndTime.format(context);
+      });
+    }
+  }
+
   showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = TextButton(
@@ -349,7 +368,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                     alignment: Alignment.centerRight,
                                     children: [
                                       TextFormField(
-                                        focusNode: f1,
+                                        controller: textControllerDate,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(
                                             left: 20,
@@ -369,15 +388,15 @@ class _BookingScreenState extends State<BookingScreen> {
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),
-                                        controller: _dateController,
+                                        // controller: textControllerDate,
                                         validator: (value) {
                                           if (value!.isEmpty) return 'Please Enter the Date';
                                           return null;
                                         },
-                                        onFieldSubmitted: (String value) {
-                                          f1.unfocus();
-                                          FocusScope.of(context).requestFocus(f2);
-                                        },
+                                        // onFieldSubmitted: (String value) {
+                                        //   f1.unfocus();
+                                        //   FocusScope.of(context).requestFocus(f2);
+                                        // },
                                         textInputAction: TextInputAction.next,
                                         style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
@@ -397,7 +416,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                selectDate(context);
+                                                _selectDate(context);
                                               },
                                             ),
                                           ),
@@ -417,7 +436,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                     alignment: Alignment.centerRight,
                                     children: [
                                       TextFormField(
-                                        focusNode: f2,
+                                        controller: textControllerStartTime,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(
                                             left: 20,
@@ -430,21 +449,20 @@ class _BookingScreenState extends State<BookingScreen> {
                                           ),
                                           filled: true,
                                           fillColor: Colors.grey[350],
-                                          hintText: 'Select Time*',
+                                          hintText: 'Select Start Time*',
                                           hintStyle: GoogleFonts.lato(
                                             color: Colors.black26,
                                             fontSize: 18,
                                             fontWeight: FontWeight.w800,
                                           ),
                                         ),
-                                        controller: _timeController,
                                         validator: (value) {
                                           if (value!.isEmpty) return 'Please Enter the Time';
                                           return null;
                                         },
-                                        onFieldSubmitted: (String value) {
-                                          f2.unfocus();
-                                        },
+                                        // onFieldSubmitted: (String value) {
+                                        //   f2.unfocus();
+                                        // },
                                         textInputAction: TextInputAction.next,
                                         style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
@@ -464,7 +482,73 @@ class _BookingScreenState extends State<BookingScreen> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                selectTime(context);
+                                                _selectStartTime(context);
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  height: 60,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Stack(
+                                    alignment: Alignment.centerRight,
+                                    children: [
+                                      TextFormField(
+                                        controller: textControllerEndTime,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.only(
+                                            left: 20,
+                                            top: 10,
+                                            bottom: 10,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(90.0)),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.grey[350],
+                                          hintText: 'Select End Time*',
+                                          hintStyle: GoogleFonts.lato(
+                                            color: Colors.black26,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                        validator: (value) {
+                                          if (value!.isEmpty) return 'Please Enter the Time';
+                                          return null;
+                                        },
+                                        // onFieldSubmitted: (String value) {
+                                        //   f2.unfocus();
+                                        // },
+                                        textInputAction: TextInputAction.next,
+                                        style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 5.0),
+                                        child: ClipOval(
+                                          child: Material(
+                                            color: Colors.indigo, // button color
+                                            child: InkWell(
+                                              // inkwell color
+                                              child: SizedBox(
+                                                width: 40,
+                                                height: 40,
+                                                child: Icon(
+                                                  Icons.timer_outlined,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                _selectEndTime(context);
                                               },
                                             ),
                                           ),
@@ -488,14 +572,117 @@ class _BookingScreenState extends State<BookingScreen> {
                                           borderRadius: BorderRadius.circular(32.0),
                                         ),
                                       ),
-                                      onPressed: () {
+                                      onPressed: () async {
                                         if (_formKey.currentState!.validate()) {
-                                          print(_dateController.text);
-                                          print(_timeController.text);
+                                          // calendar.EventAttendee eventAttendee = new calendar.EventAttendee();
+                                          // eventAttendee.email = psikiaterEmail;
+                                          // attendeeEmails.add(eventAttendee);
+
+                                          int startTimeInEpoch = DateTime(
+                                            selectedDate.year,
+                                            selectedDate.month,
+                                            selectedDate.day,
+                                            selectedStartTime.hour,
+                                            selectedStartTime.minute,
+                                          ).millisecondsSinceEpoch;
+
+                                          int endTimeInEpoch = DateTime(
+                                            selectedDate.year,
+                                            selectedDate.month,
+                                            selectedDate.day,
+                                            selectedEndTime.hour,
+                                            selectedEndTime.minute,
+                                          ).millisecondsSinceEpoch;
+
+                                          print(attendeeEmails);
+                                          print('DIFFERENCE: ${endTimeInEpoch - startTimeInEpoch}');
+
+                                          print('Start Time: ${DateTime.fromMillisecondsSinceEpoch(startTimeInEpoch)}');
+                                          print('End Time: ${DateTime.fromMillisecondsSinceEpoch(endTimeInEpoch)}');
+
+                                          if (endTimeInEpoch - startTimeInEpoch > 0) {
+                                            print('endtimepoech');
+
+                                            // if (_validateTitle(currentTitle) == null) {
+                                            await calendarClient.insert(
+                                              currentTitle: currentTitle,
+                                              currentDesc: currentDesc,
+                                              attendeeEmailList: attendeeEmails,
+                                              shouldNotifyAttendees: shouldNofityAttendees,
+                                              hasConferenceSupport: hasConferenceSupport,
+                                              startTime: DateTime.fromMillisecondsSinceEpoch(startTimeInEpoch),
+                                              endTime: DateTime.fromMillisecondsSinceEpoch(endTimeInEpoch),
+                                            );
+                                            //   .then((eventData) async {
+                                            // String? eventId = eventData!['id'];
+                                            // String? eventLink = eventData['link'];
+                                            // print('eventData');
+
+                                            // List<String> emails = [];
+
+                                            // for (int i = 0; i < attendeeEmails.length; i++) emails.add(attendeeEmails[i].email!);
+
+                                            // EventInfo eventInfo = EventInfo(
+                                            //   id: eventId!,
+                                            //   name: currentTitle,
+                                            //   description: currentDesc,
+                                            //   link: eventLink!,
+                                            //   attendeeEmails: emails,
+                                            //   shouldNotifyAttendees: shouldNofityAttendees,
+                                            //   hasConfereningSupport: hasConferenceSupport,
+                                            //   startTimeInEpoch: startTimeInEpoch,
+                                            //   endTimeInEpoch: endTimeInEpoch,
+                                            // );
+                                            print('kestore');
+                                            // await FirebaseFirestore.instance.collection('booking').doc(user.email).collection('pending').doc().set({
+                                            //   'id': eventId,
+                                            //   'link': eventLink,
+                                            //   'name': currentTitle,
+                                            //   'description': currentDesc,
+                                            //   'psikiaterEmail': emails,
+                                            //   'startTime': startTimeInEpoch,
+                                            //   'endTime': endTimeInEpoch,
+                                            // }, SetOptions(merge: true));
+
+                                            // FirebaseFirestore.instance.collection('booking').doc(user.email).collection('all').doc().set({
+                                            //   'id': eventId,
+                                            //   'link': eventLink,
+                                            //   'name': currentTitle,
+                                            //   'description': currentDesc,
+                                            //   'psikiaterEmail': emails,
+                                            //   'startTime': startTimeInEpoch,
+                                            //   'endTime': endTimeInEpoch,
+                                            // }, SetOptions(merge: true));
+                                            // await storage.storeEventData(eventInfo).whenComplete(() => Navigator.of(context).pop()).catchError(
+                                            //       (e) => print(e),
+                                            //     );
+                                            // }).catchError(
+                                            //   (e) => print(e),
+                                            // );
+
+                                            // setState(() {
+                                            //   isDataStorageInProgress = false;
+                                            // });
+                                            // } else {
+                                            //   setState(() {
+                                            //     isEditingTitle = true;
+                                            //     isEditingLink = true;
+                                            //   });
+                                            // }
+                                          } else {
+                                            setState(() {
+                                              isErrorTime = true;
+                                              errorString = 'Invalid time! Please use a proper start and end time';
+                                            });
+                                          }
+                                          // print(emails);
+                                          print(textControllerDate.text);
+                                          print(textControllerStartTime.text);
+                                          print(textControllerEndTime.text);
                                           print(widget.psikiaterName);
                                           print(user.displayName);
-                                          _createAppointment();
-                                          // showAlertDialog(context);
+
+                                          // _createAppointment();
                                         }
                                       },
                                       child: Text(
@@ -593,23 +780,23 @@ class _BookingScreenState extends State<BookingScreen> {
     //   print('Error creating event $e');
     // }
 
-    print(dateUTC + ' ' + date_Time + ':00');
+    // print(dateUTC + ' ' + date_Time + ':00');
     FirebaseFirestore.instance.collection('booking').doc(user.email).collection('pending').doc().set({
       // 'id': eventId,
-      'link': joiningLink,
+      // 'link': joiningLink,
       'name': currentTitle,
       'description': currentDesc,
-      'psikiaterEmail': psikiaterEmail,
-      'date': DateTime.parse(dateUTC + ' ' + date_Time + ':00'),
+      // 'psikiaterEmail': psikiaterEmail,
+      // 'date': DateTime.parse(dateUTC + ' ' + date_Time + ':00'),
     }, SetOptions(merge: true));
 
     FirebaseFirestore.instance.collection('booking').doc(user.email).collection('all').doc().set({
       // 'id': eventId,
-      'link': joiningLink,
+      // 'link': joiningLink,
       'name': currentTitle,
       'description': currentDesc,
-      'psikiaterEmail': psikiaterEmail,
-      'date': DateTime.parse(dateUTC + ' ' + date_Time + ':00'),
+      // 'psikiaterEmail': psikiaterEmail,
+      // 'date': DateTime.parse(dateUTC + ' ' + date_Time + ':00'),
     }, SetOptions(merge: true));
   }
 }

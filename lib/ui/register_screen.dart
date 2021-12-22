@@ -277,11 +277,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                   if (_formKey.currentState!.validate()) {
                                     showLoaderDialog(context);
                                     _registerAccount();
-                                    var _clientID = ClientId(Secret.getId(), "");
-                                    const _scopes = [calendar.CalendarApi.calendarScope];
-                                    await clientViaUserConsent(_clientID, _scopes, prompt).then((AuthClient client) async {
-                                      CalendarClient.calendar = calendar.CalendarApi(client);
-                                    });
+                                    // var _clientID = ClientId(Secret.getId(), "");
+                                    // const _scopes = [calendar.CalendarApi.calendarScope];
+                                    // await clientViaUserConsent(_clientID, _scopes, prompt).then((AuthClient client) async {
+                                    //   // print(client.credentials.accessToken.data);
+                                    //   CalendarClient.calendar = calendar.CalendarApi(client);
+                                    // });
                                   }
                                 },
                               ),
@@ -434,7 +435,7 @@ class _RegisterPageState extends State<RegisterPage> {
         'birthDate': null,
         'email': user.email,
         'phone': null,
-        'address': null,
+        'alamat': null,
         'image': null,
         'gender': null,
       }, SetOptions(merge: true));

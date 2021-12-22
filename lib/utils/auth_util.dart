@@ -3,10 +3,10 @@ part of 'util.dart';
 class Authentication {
   static SnackBar customSnackBar({required String content}) {
     return SnackBar(
-      backgroundColor: Colors.black,
+      backgroundColor: blackColor,
       content: Text(
         content,
-        style: TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
+        style: TextStyle(color: maroonColor, letterSpacing: 0.5),
       ),
     );
   }

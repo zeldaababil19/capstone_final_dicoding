@@ -917,53 +917,57 @@ class _BookingFakeScreenState extends State<BookingFakeScreen> {
                                   print('End Time: ${DateTime.fromMillisecondsSinceEpoch(endTimeInEpoch)}');
 
                                   if (endTimeInEpoch - startTimeInEpoch > 0) {
-                                    if (_validateTitle(currentTitle) != null) {
-                                      setState(() {
-                                        isEditingTitle = true;
-                                        isEditingLink = true;
-                                      });
-                                    } else {
-                                      await calendarClient
-                                          .insert(
-                                        title: currentTitle,
-                                        description: currentDesc,
-                                        attendeeEmailList: attendeeEmails,
-                                        shouldNotifyAttendees: shouldNofityAttendees,
-                                        hasConferenceSupport: hasConferenceSupport,
-                                        startTime: DateTime.fromMillisecondsSinceEpoch(startTimeInEpoch),
-                                        endTime: DateTime.fromMillisecondsSinceEpoch(endTimeInEpoch),
-                                      )
-                                          .then((eventData) async {
-                                      print('kebawah');
-                                        String eventId = eventData['id']!;
-                                        String eventLink = eventData['link']!;
+                                    print('endtimepoech');
 
-                                        List<String> emails = [];
+                                    // if (_validateTitle(currentTitle) == null) {
+                                    //   print('validatetitle');
+                                    //   await calendarClient
+                                    //       .insert(
+                                    //     title: currentTitle,
+                                    //     description: currentDesc,
+                                    //     attendeeEmailList: attendeeEmails,
+                                    //     shouldNotifyAttendees: shouldNofityAttendees,
+                                    //     hasConferenceSupport: hasConferenceSupport,
+                                    //     startTime: DateTime.fromMillisecondsSinceEpoch(startTimeInEpoch),
+                                    //     endTime: DateTime.fromMillisecondsSinceEpoch(endTimeInEpoch),
+                                    //   )
+                                    //       .then((eventData) async {
+                                    //     String? eventId = eventData!['id'];
+                                    //     String? eventLink = eventData['link'];
+                                    //     print('eventData');
 
-                                        for (int i = 0; i < attendeeEmails.length; i++) emails.add(attendeeEmails[i].email!);
+                                    //     List<String> emails = [];
 
-                                        EventInfo eventInfo = EventInfo(
-                                          id: eventId,
-                                          name: currentTitle,
-                                          description: currentDesc,
-                                          link: eventLink,
-                                          attendeeEmails: emails,
-                                          shouldNotifyAttendees: shouldNofityAttendees,
-                                          hasConfereningSupport: hasConferenceSupport,
-                                          startTimeInEpoch: startTimeInEpoch,
-                                          endTimeInEpoch: endTimeInEpoch,
-                                        );
-                                        await storage.storeEventData(eventInfo).whenComplete(() => Navigator.of(context).pop()).catchError(
-                                              (e) => print(e),
-                                            );
-                                      }).catchError(
-                                        (e) => print(e),
-                                      );
+                                    //     for (int i = 0; i < attendeeEmails.length; i++) emails.add(attendeeEmails[i].email!);
 
-                                      setState(() {
-                                        isDataStorageInProgress = false;
-                                      });
-                                    }
+                                    //     EventInfo eventInfo = EventInfo(
+                                    //       id: eventId!,
+                                    //       name: currentTitle,
+                                    //       description: currentDesc,
+                                    //       link: eventLink!,
+                                    //       attendeeEmails: emails,
+                                    //       shouldNotifyAttendees: shouldNofityAttendees,
+                                    //       hasConfereningSupport: hasConferenceSupport,
+                                    //       startTimeInEpoch: startTimeInEpoch,
+                                    //       endTimeInEpoch: endTimeInEpoch,
+                                    //     );
+                                    //     print('kestore');
+                                    //     await storage.storeEventData(eventInfo).whenComplete(() => Navigator.of(context).pop()).catchError(
+                                    //           (e) => print(e),
+                                    //         );
+                                    //   }).catchError(
+                                    //     (e) => print(e),
+                                    //   );
+
+                                    //   setState(() {
+                                    //     isDataStorageInProgress = false;
+                                    //   });
+                                    // } else {
+                                    //   setState(() {
+                                    //     isEditingTitle = true;
+                                    //     isEditingLink = true;
+                                    //   });
+                                    // }
                                   } else {
                                     setState(() {
                                       isErrorTime = true;

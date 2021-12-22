@@ -246,21 +246,21 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => BookingFakeScreen(),
-                                    ),
-                                  );
                                   // Navigator.push(
                                   //   context,
                                   //   MaterialPageRoute(
-                                  //     builder: (context) => BookingScreen(
-                                  //       psikiaterName: document['name'],
-                                  //       psikiaterEmail: document['email'],
-                                  //     ),
+                                  //     builder: (context) => BookingFakeScreen(),
                                   //   ),
                                   // );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BookingScreen(
+                                        psikiaterName: document['name'],
+                                        psikiaterEmail: document['email'],
+                                      ),
+                                    ),
+                                  );
                                 },
                                 child: Text(
                                   'Buat Jadwal Meet',

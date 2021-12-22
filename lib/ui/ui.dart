@@ -3,7 +3,6 @@ import 'package:capstone_final/models/model.dart';
 import 'package:capstone_final/providers/provider.dart';
 import 'package:capstone_final/services/service.dart';
 import 'package:capstone_final/shared/shared.dart';
-import 'package:capstone_final/utils/calendar_client.dart';
 import 'package:capstone_final/utils/util.dart';
 import 'package:capstone_final/widgets/widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

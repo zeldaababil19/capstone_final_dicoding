@@ -1,140 +1,191 @@
-import 'package:flutter/material.dart';
-import 'package:googleapis/calendar/v3.dart';
+part of 'util.dart';
 
 class CalendarClient {
-  static var calendar;
+// final calendar = new CalendarApi(client: );
+  // late CalendarApi calendar;
+  // var _credentials;
+  static const _scopes = [CalendarApi.calendarScope];
+  // static var calendar;
 
-  Future<Map<String, String>> insert({
-    required String title,
-    required String description,
+  Future<Map<String, String>?> insert({
+    required String currentTitle,
+    required String currentDesc,
+    // required String psikiaterEmail,
     required List<EventAttendee> attendeeEmailList,
+    // required String attendeeEmailList,
     required bool shouldNotifyAttendees,
     required bool hasConferenceSupport,
     required DateTime startTime,
     required DateTime endTime,
   }) async {
-    late Map<String, String> eventData;
+    var _clientID = ClientId("389215821819-0i3ed9vl37gbh5qc3ro5hhn50q2k017e.apps.googleusercontent.com", "");
 
-    String calendarId = "primary";
-    Event event = Event();
+    // if (_credentials != null) {
+    clientViaUserConsent(_clientID, _scopes, prompt).then((AuthClient client) {
+      var calendar = CalendarApi(client);
+      calendar.calendarList.list().then((value) => print("VAL________$value"));
 
-    event.summary = title;
-    event.description = description;
-    event.attendees = attendeeEmailList;
+      late Map<String, String> eventData;
 
-    if (hasConferenceSupport) {
-      ConferenceData conferenceData = ConferenceData();
-      CreateConferenceRequest conferenceRequest = CreateConferenceRequest();
-      conferenceRequest.requestId = "${startTime.millisecondsSinceEpoch}-${endTime.millisecondsSinceEpoch}";
-      conferenceData.createRequest = conferenceRequest;
+      String calendarId = "primary";
+      Event event = Event();
 
-      event.conferenceData = conferenceData;
-    }
+      event.summary = currentTitle;
+      event.description = currentDesc;
+      event.attendees = attendeeEmailList;
 
-    EventDateTime start = new EventDateTime();
-    start.dateTime = startTime;
-    start.timeZone = "GMT+05:30";
-    event.start = start;
+      EventDateTime start = EventDateTime();
+      start.dateTime = startTime;
+      start.timeZone = "GMT+05:30";
+      event.start = start;
 
-    EventDateTime end = new EventDateTime();
-    end.timeZone = "GMT+05:30";
-    end.dateTime = endTime;
-    event.end = end;
+      EventDateTime end = EventDateTime();
+      end.timeZone = "GMT+05:30";
+      end.dateTime = endTime;
+      event.end = end;
 
-    try {
-      await calendar.events.insert(event, calendarId, conferenceDataVersion: hasConferenceSupport ? 1 : 0, sendUpdates: shouldNotifyAttendees ? "all" : "none").then((value) {
-        print("Event Status: ${value.status}");
-        if (value.status == "confirmed") {
-          late String joiningLink;
-          late String eventId;
+      if (hasConferenceSupport) {
+        ConferenceData conferenceData = ConferenceData();
+        CreateConferenceRequest conferenceRequest = CreateConferenceRequest();
+        conferenceRequest.requestId = "${startTime.millisecondsSinceEpoch}-${endTime.millisecondsSinceEpoch}";
+        conferenceData.createRequest = conferenceRequest;
 
-          eventId = value.id;
+        event.conferenceData = conferenceData;
+      }
 
-          if (hasConferenceSupport) {
-            joiningLink = "https://meet.google.com/${value.conferenceData.conferenceId}";
+      try {
+        calendar.events.insert(event, calendarId, conferenceDataVersion: hasConferenceSupport ? 1 : 0, sendUpdates: shouldNotifyAttendees ? "all" : "none").then((value) {
+          print("Event Status: ${value.status}");
+          if (value.status == "confirmed") {
+            late String joiningLink;
+            late String eventId;
+
+            eventId = value.id!;
+
+            if (hasConferenceSupport) {
+              joiningLink = "https://meet.google.com/${value.conferenceData!.conferenceId}";
+            }
+
+            eventData = {'id': eventId, 'link': joiningLink};
+            List<String> emails = [];
+            for (int i = 0; i < attendeeEmailList.length; i++) emails.add(attendeeEmailList[i].email!);
+
+            var shared = List.filled(3, []);
+            for (int i = 0; i < attendeeEmailList.length; i++) shared[0].add(attendeeEmailList[i].email!);
+
+            FirebaseFirestore.instance.collection('booking').doc(user!.email).collection('pending').doc().set({
+              'id': eventId,
+              'link': joiningLink,
+              'name': currentTitle,
+              'description': currentDesc,
+              'psikiaterEmail': emails,
+              // 'psikiaterEmail': shared,
+              'startTime': startTime,
+              'endTime': endTime,
+            }, SetOptions(merge: true));
+
+            FirebaseFirestore.instance.collection('booking').doc(user!.email).collection('all').doc().set({
+              'id': eventId,
+              'link': joiningLink,
+              'name': currentTitle,
+              'description': currentDesc,
+              'psikiaterEmail': emails,
+              // 'psikiaterEmail': shared,
+              'startTime': startTime,
+              'endTime': endTime,
+            }, SetOptions(merge: true));
+            print('Event added to Google Calendar');
+          } else {
+            print("Unable to add event to Google Calendar");
           }
-
-          eventData = {'id': eventId, 'link': joiningLink};
-
-          print('Event added to Google Calendar');
-        } else {
-          print("Unable to add event to Google Calendar");
-        }
-      });
-    } catch (e) {
-      print('Error creating event $e');
-    }
-
-    return eventData;
+        });
+      } catch (e) {
+        print('Error creating event $e');
+      }
+      return eventData;
+    });
+    // return null;
   }
 
-  Future<Map<String, String>> modify({
-    required String id,
-    required String title,
-    required String description,
-    required String location,
-    required List<EventAttendee> attendeeEmailList,
-    required bool shouldNotifyAttendees,
-    required bool hasConferenceSupport,
-    required DateTime startTime,
-    required DateTime endTime,
-  }) async {
-    late Map<String, String> eventData;
+  // Future<Map<String, String>> modify({
+  //   required String id,
+  //   required String title,
+  //   required String description,
+  //   required String location,
+  //   required List<EventAttendee> attendeeEmailList,
+  //   required bool shouldNotifyAttendees,
+  //   required bool hasConferenceSupport,
+  //   required DateTime startTime,
+  //   required DateTime endTime,
+  // }) async {
+  //   late Map<String, String> eventData;
 
-    String calendarId = "primary";
-    Event event = Event();
+  //   String calendarId = "primary";
+  //   Event event = Event();
 
-    event.summary = title;
-    event.description = description;
-    event.attendees = attendeeEmailList;
-    event.location = location;
+  //   event.summary = title;
+  //   event.description = description;
+  //   event.attendees = attendeeEmailList;
+  //   event.location = location;
 
-    EventDateTime start = new EventDateTime();
-    start.dateTime = startTime;
-    start.timeZone = "GMT+05:30";
-    event.start = start;
+  //   EventDateTime start = new EventDateTime();
+  //   start.dateTime = startTime;
+  //   start.timeZone = "GMT+05:30";
+  //   event.start = start;
 
-    EventDateTime end = new EventDateTime();
-    end.timeZone = "GMT+05:30";
-    end.dateTime = endTime;
-    event.end = end;
+  //   EventDateTime end = new EventDateTime();
+  //   end.timeZone = "GMT+05:30";
+  //   end.dateTime = endTime;
+  //   event.end = end;
 
-    try {
-      await calendar.events.patch(event, calendarId, id, conferenceDataVersion: hasConferenceSupport ? 1 : 0, sendUpdates: shouldNotifyAttendees ? "all" : "none").then((value) {
-        print("Event Status: ${value.status}");
-        if (value.status == "confirmed") {
-          late String joiningLink;
-          late String eventId;
+  //   try {
+  //     await calendar.events.patch(event, calendarId, id, conferenceDataVersion: hasConferenceSupport ? 1 : 0, sendUpdates: shouldNotifyAttendees ? "all" : "none").then((value) {
+  //       print("Event Status: ${value.status}");
+  //       if (value.status == "confirmed") {
+  //         late String joiningLink;
+  //         late String eventId;
 
-          eventId = value.id;
+  //         eventId = value.id!;
 
-          if (hasConferenceSupport) {
-            joiningLink = "https://meet.google.com/${value.conferenceData.conferenceId}";
-          }
+  //         if (hasConferenceSupport) {
+  //           joiningLink = "https://meet.google.com/${value.conferenceData!.conferenceId}";
+  //         }
 
-          eventData = {'id': eventId, 'link': joiningLink};
+  //         eventData = {'id': eventId, 'link': joiningLink};
 
-          print('Event updated in google calendar');
-        } else {
-          print("Unable to update event in google calendar");
-        }
-      });
-    } catch (e) {
-      print('Error updating event $e');
-    }
+  //         print('Event updated in google calendar');
+  //       } else {
+  //         print("Unable to update event in google calendar");
+  //       }
+  //     });
+  //   } catch (e) {
+  //     print('Error updating event $e');
+  //   }
 
-    return eventData;
-  }
+  //   return eventData;
+  // }
 
-  Future<void> delete(String eventId, bool shouldNotify) async {
-    String calendarId = "primary";
+  // Future<void> delete(String eventId, bool shouldNotify) async {
+  //   String calendarId = "primary";
 
-    try {
-      await calendar.events.delete(calendarId, eventId, sendUpdates: shouldNotify ? "all" : "none").then((value) {
-        print('Event deleted from Google Calendar');
-      });
-    } catch (e) {
-      print('Error deleting event: $e');
+  //   try {
+  //     await calendar.events.delete(calendarId, eventId, sendUpdates: shouldNotify ? "all" : "none").then((value) {
+  //       print('Event deleted from Google Calendar');
+  //     });
+  //   } catch (e) {
+  //     print('Error deleting event: $e');
+  //   }
+  // }
+
+  void prompt(String url) async {
+    print("Please go to the following URL and grant access:");
+    print("  => $url");
+    print("");
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }
