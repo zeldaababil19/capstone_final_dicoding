@@ -1,6 +1,13 @@
 part of 'util.dart';
 
 class CalendarClient {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? user;
+
+  Future<void> _getUser() async {
+    user = _auth.currentUser!;
+  }
+
 // final calendar = new CalendarApi(client: );
   // late CalendarApi calendar;
   // var _credentials;
@@ -10,9 +17,7 @@ class CalendarClient {
   Future<Map<String, String>?> insert({
     required String currentTitle,
     required String currentDesc,
-    // required String psikiaterEmail,
     required List<EventAttendee> attendeeEmailList,
-    // required String attendeeEmailList,
     required bool shouldNotifyAttendees,
     required bool hasConferenceSupport,
     required DateTime startTime,
@@ -20,7 +25,6 @@ class CalendarClient {
   }) async {
     var _clientID = ClientId("389215821819-0i3ed9vl37gbh5qc3ro5hhn50q2k017e.apps.googleusercontent.com", "");
 
-    // if (_credentials != null) {
     clientViaUserConsent(_clientID, _scopes, prompt).then((AuthClient client) {
       var calendar = CalendarApi(client);
       calendar.calendarList.list().then((value) => print("VAL________$value"));
@@ -69,10 +73,7 @@ class CalendarClient {
             eventData = {'id': eventId, 'link': joiningLink};
             List<String> emails = [];
             for (int i = 0; i < attendeeEmailList.length; i++) emails.add(attendeeEmailList[i].email!);
-
-            var shared = List.filled(3, []);
-            for (int i = 0; i < attendeeEmailList.length; i++) shared[0].add(attendeeEmailList[i].email!);
-
+            _getUser();
             FirebaseFirestore.instance.collection('booking').doc(user!.email).collection('pending').doc().set({
               'id': eventId,
               'link': joiningLink,

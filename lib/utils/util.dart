@@ -16,6 +16,4 @@ import 'package:url_launcher/url_launcher.dart';
 
 part 'auth_util.dart';
 part 'enum_util.dart';
-part 'secret.dart';
-part 'storage.dart';
 part 'calendar_client.dart';

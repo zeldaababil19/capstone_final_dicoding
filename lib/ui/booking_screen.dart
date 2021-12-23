@@ -10,7 +10,6 @@ class BookingScreen extends StatefulWidget {
 }
 
 class _BookingScreenState extends State<BookingScreen> {
-  Storage storage = Storage();
   CalendarClient calendarClient = CalendarClient();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -25,12 +24,12 @@ class _BookingScreenState extends State<BookingScreen> {
   static const _scopes = [calendar.CalendarApi.calendarScope];
 
   late String currentTitle = 'Halo Psikiater ' + widget.psikiaterName;
-  late String currentDesc = 'Konsultasi dengan pasien ' + user.displayName!;
+  late String currentDesc = 'Konsultasi dengan pasien ' + user!.displayName!;
   late String psikiaterEmail = widget.psikiaterEmail;
   late String psikiaterName = widget.psikiaterName;
-  late String pasienEmail = user.email!;
-  late String pasienName = user.displayName!;
-  late String pasienPhone = user.phoneNumber!;
+  late String pasienEmail = user!.email!;
+  late String pasienName = user!.displayName!;
+  late String pasienPhone = user!.phoneNumber!;
   late String errorString = '';
   List<calendar.EventAttendee> attendeeEmails = [];
   // var fixedLengthList = List<String>.filled(1, '${psikiaterEmail}');
@@ -47,7 +46,7 @@ class _BookingScreenState extends State<BookingScreen> {
   bool hasConferenceSupport = true;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  late User user;
+  User? user;
 
   Future<void> _getUser() async {
     user = _auth.currentUser!;
@@ -680,7 +679,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                           print(textControllerStartTime.text);
                                           print(textControllerEndTime.text);
                                           print(widget.psikiaterName);
-                                          print(user.displayName);
+                                          print(user!.displayName);
 
                                           // _createAppointment();
                                         }
@@ -781,7 +780,7 @@ class _BookingScreenState extends State<BookingScreen> {
     // }
 
     // print(dateUTC + ' ' + date_Time + ':00');
-    FirebaseFirestore.instance.collection('booking').doc(user.email).collection('pending').doc().set({
+    FirebaseFirestore.instance.collection('booking').doc(user!.email).collection('pending').doc().set({
       // 'id': eventId,
       // 'link': joiningLink,
       'name': currentTitle,
@@ -790,7 +789,7 @@ class _BookingScreenState extends State<BookingScreen> {
       // 'date': DateTime.parse(dateUTC + ' ' + date_Time + ':00'),
     }, SetOptions(merge: true));
 
-    FirebaseFirestore.instance.collection('booking').doc(user.email).collection('all').doc().set({
+    FirebaseFirestore.instance.collection('booking').doc(user!.email).collection('all').doc().set({
       // 'id': eventId,
       // 'link': joiningLink,
       'name': currentTitle,

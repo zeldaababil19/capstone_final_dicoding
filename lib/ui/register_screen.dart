@@ -220,7 +220,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               controller: _passwordConfirmController,
                               obscureText: true,
                               decoration: InputDecoration(
-                                hintText: 'Masukkan konfirmasi password',
+                                hintText: 'Konfirmasi password',
                                 fillColor: baseColor,
                                 filled: true,
                                 focusedBorder: OutlineInputBorder(
@@ -277,12 +277,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                   if (_formKey.currentState!.validate()) {
                                     showLoaderDialog(context);
                                     _registerAccount();
-                                    // var _clientID = ClientId(Secret.getId(), "");
-                                    // const _scopes = [calendar.CalendarApi.calendarScope];
-                                    // await clientViaUserConsent(_clientID, _scopes, prompt).then((AuthClient client) async {
-                                    //   // print(client.credentials.accessToken.data);
-                                    //   CalendarClient.calendar = calendar.CalendarApi(client);
-                                    // });
                                   }
                                 },
                               ),
@@ -406,8 +400,10 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _registerAccount() async {
-    User? user;
-    UserCredential? credential;
+    late User user;
+    late UserCredential credential;
+    const _scopes = [calendar.CalendarApi.calendarScope];
+    var _clientID = ClientId("389215821819-0i3ed9vl37gbh5qc3ro5hhn50q2k017e.apps.googleusercontent.com", "");
 
     try {
       credential = await _auth.createUserWithEmailAndPassword(
@@ -418,16 +414,15 @@ class _RegisterPageState extends State<RegisterPage> {
       if (error.toString().compareTo('[firebase_auth/email-already-in-use] The email address is already in use by another account.') == 0) {
         showAlertDialog(context);
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        print(user);
+        // print(user);
       }
     }
-    user = credential!.user;
+    user = credential.user!;
 
     if (user != null) {
       if (!user.emailVerified) {
         await user.sendEmailVerification();
       }
-      // ignore: deprecated_member_use
       await user.updateProfile(displayName: _nameController.text);
 
       FirebaseFirestore.instance.collection('pasiens').doc(user.uid).set({
@@ -439,12 +434,14 @@ class _RegisterPageState extends State<RegisterPage> {
         'image': null,
         'gender': null,
       }, SetOptions(merge: true));
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          // builder: (context) => UserInfoScreen(user: user),
-          builder: (context) => HomePage(),
-        ),
-      );
+      Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(
+      //     // builder: (context) => UserInfoScreen(user: user),
+      //     // builder: (context) => HomePage(),
+      //     builder: (context) => MainPage(),
+      //   ),
+      // );
       // Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     } else {
       _isSuccess = false;

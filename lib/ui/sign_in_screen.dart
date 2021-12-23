@@ -271,15 +271,14 @@ class _LoginPageState extends State<LoginPage> {
       if (user!.emailVerified) {
         await user.sendEmailVerification();
       }
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          // builder: (context) => UserInfoScreen(user: user),
-          builder: (context) => HomePage(),
-        ),
-      );
-      // Navigator.of(context).pushNamedAndRemoveUntil('/home_page', (Route<dynamic> route) => false);
-      // await _auth.signInWithEmailAndPassword(email: email, password: password);
-      // Navigator.pushReplacementNamed(context, HomePage.routeName);
+      Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(
+      //     // builder: (context) => UserInfoScreen(user: user),
+      //     // builder: (context) => HomePage(),
+      //     builder: (context) => MainPage(),
+      //   ),
+      // );
     } catch (e) {
       final snackbar = SnackBar(
         content: Expanded(

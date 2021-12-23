@@ -9,7 +9,7 @@ class _ProfileSettingsState extends State<ProfileSetting> {
   // UserProfileDetails detail = UserProfileDetails();
 
   FirebaseAuth _auth = FirebaseAuth.instance;
-  late User user;
+  User? user;
 
   Future<void> _getUser() async {
     user = _auth.currentUser!;
@@ -48,7 +48,7 @@ class _ProfileSettingsState extends State<ProfileSetting> {
     return Scaffold(
       appBar: AppBar(
         elevation: 2,
-        backgroundColor: Colors.white,
+        backgroundColor: baseColor,
         leading: Padding(
           padding: const EdgeInsets.only(left: 10),
           child: IconButton(
@@ -68,7 +68,7 @@ class _ProfileSettingsState extends State<ProfileSetting> {
       body: Column(
         children: [
           FutureBuilder<DocumentSnapshot>(
-            future: pasiens.doc(user.uid).get(),
+            future: pasiens.doc(user!.uid).get(),
             builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasError) {
                 return Text("Something went wrong");
@@ -124,7 +124,7 @@ class _ProfileSettingsState extends State<ProfileSetting> {
                                     ),
                                   ),
                                   Text(
-                                    data[value[index]]?.isEmpty ?? true ? 'Not Added' : data[value[index]],
+                                    data[value[index]]?.isEmpty ?? true ? 'belum ada' : data[value[index]],
                                     style: GoogleFonts.lato(
                                       color: Colors.black54,
                                       fontSize: 15,

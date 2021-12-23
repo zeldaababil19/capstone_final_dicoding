@@ -163,7 +163,6 @@ class _PsikiaterCardWidgetState extends State<PsikiaterCardWidget> {
                     );
                   },
                 );
-              
               });
         },
       ),

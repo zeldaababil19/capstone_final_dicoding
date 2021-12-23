@@ -12,7 +12,7 @@ class JadwalScreens extends StatefulWidget {
 class _JadwalScreensState extends State<JadwalScreens> {
   final TextEditingController _filter = TextEditingController();
   // Icon _searchIcon = const Icon(Icons.search);
-  Icon calendar = const Icon(Plus.calendar_check_o);
+  Icon calendar = const Icon(Plus.calendarCheckO);
   Widget _appBar = Text(
     'Jadwalku',
     style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w900),

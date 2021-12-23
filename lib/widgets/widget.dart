@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 
 part 'sign_button_widget.dart';
 part 'bottom_navbar_widget.dart';
-part 'user_detail_widget.dart';
 part 'search_widget.dart';
 part 'card_psikiater_widget.dart';
 part 'card_jadwal_widget.dart';

@@ -3,8 +3,8 @@ part of 'service.dart';
 final FirebaseFirestore _firebase = FirebaseFirestore.instance;
 final CollectionReference _userDet = _firebase.collection('user');
 final FirebaseAuth auth = FirebaseAuth.instance;
-final User? user = auth.currentUser;
-// user!.uid;
+final User user = auth.currentUser!;
+// user.uid;
 
 class UserService {
   // static String? userUid;
@@ -16,7 +16,7 @@ class UserService {
     required String birthDate,
     required dynamic gender,
   }) async {
-    DocumentReference document = _userDet.doc(user!.uid).collection('data').doc();
+    DocumentReference document = _userDet.doc(user.uid).collection('data').doc();
 
     Map<String, dynamic> data = <String, dynamic>{
       "nama": nama,
@@ -37,7 +37,7 @@ class UserService {
   }
 
   static Stream readUserDet() {
-    CollectionReference userDetail = _userDet.doc(user!.uid).collection('data');
+    CollectionReference userDetail = _userDet.doc(user.uid).collection('data');
 
     return userDetail.snapshots();
   }
@@ -54,7 +54,7 @@ class UserService {
   }
 
   Stream<UserDetailed> get userData {
-    return _userDet.doc(user!.uid).collection('data').doc().snapshots().map(_userDataFromSnapshot);
+    return _userDet.doc(user.uid).collection('data').doc().snapshots().map(_userDataFromSnapshot);
   }
 
   static Future<void> updateUserDet({
@@ -65,7 +65,7 @@ class UserService {
     required dynamic gender,
     required String idDoc,
   }) async {
-    DocumentReference document = _userDet.doc(user!.uid).collection('data').doc(idDoc);
+    DocumentReference document = _userDet.doc(user.uid).collection('data').doc(idDoc);
 
     Map<String, dynamic> data = <String, dynamic>{
       "nama": nama,
