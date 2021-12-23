@@ -11,7 +11,7 @@ class SplashScreenPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // _getUser();
+    _getUser();
     return SplashScreen.timer(
       seconds: 3,
       navigateAfterSeconds: user != null ? MainPage() : LoginPage(),
@@ -32,7 +32,7 @@ class SplashScreenPage extends StatelessWidget {
   }
 
   Route _createRoute() {
-    // _getUser();
+    _getUser();
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => user != null ? MainPage() : LoginPage(),
       // pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),

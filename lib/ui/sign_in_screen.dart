@@ -222,12 +222,14 @@ class _LoginPageState extends State<LoginPage> {
                             'Belum punya akun ?',
                             style: TextStyle(color: Colors.black),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute<void>(builder: (_) => RegisterPage()),
-                              );
-                            },
+                          TextButton(
+                            style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.transparent)),
+                            onPressed: () => _pushPage(context, RegisterPage()),
+                            //onTap: () {
+                            //   Navigator.of(context).push(
+                            //     MaterialPageRoute<void>(builder: (_) => RegisterPage()),
+                            //   );
+                            // },
                             child: const Text(
                               'Daftar disini',
                               style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
@@ -299,5 +301,11 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
     }
+  }
+
+  void _pushPage(BuildContext context, Widget page) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => page),
+    );
   }
 }

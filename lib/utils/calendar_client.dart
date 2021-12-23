@@ -17,6 +17,10 @@ class CalendarClient {
   Future<Map<String, String>?> insert({
     required String currentTitle,
     required String currentDesc,
+    required String psikiaterName,
+    required String pasienName,
+    required String psikiaterSpesialist,
+    required String psikiaterImage,
     required List<EventAttendee> attendeeEmailList,
     required bool shouldNotifyAttendees,
     required bool hasConferenceSupport,
@@ -25,6 +29,11 @@ class CalendarClient {
   }) async {
     var _clientID = ClientId("389215821819-0i3ed9vl37gbh5qc3ro5hhn50q2k017e.apps.googleusercontent.com", "");
 
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // var ambilUserOauth = prefs.getString('oauth_tersimpan');
+    // print(ambilUserOauth);
+
+    // if (ambilUserOauth != "confirmed") {
     clientViaUserConsent(_clientID, _scopes, prompt).then((AuthClient client) {
       var calendar = CalendarApi(client);
       calendar.calendarList.list().then((value) => print("VAL________$value"));
@@ -58,9 +67,14 @@ class CalendarClient {
       }
 
       try {
-        calendar.events.insert(event, calendarId, conferenceDataVersion: hasConferenceSupport ? 1 : 0, sendUpdates: shouldNotifyAttendees ? "all" : "none").then((value) {
+        calendar.events.insert(event, calendarId, conferenceDataVersion: hasConferenceSupport ? 1 : 0, sendUpdates: shouldNotifyAttendees ? "all" : "none").then((value) async {
           print("Event Status: ${value.status}");
+
           if (value.status == "confirmed") {
+            // SharedPreferences prefs = await SharedPreferences.getInstance();
+            // var userOauth = "$value.status";
+            // await prefs.setString('oauth_tersimpan', userOauth);
+
             late String joiningLink;
             late String eventId;
 
@@ -74,13 +88,21 @@ class CalendarClient {
             List<String> emails = [];
             for (int i = 0; i < attendeeEmailList.length; i++) emails.add(attendeeEmailList[i].email!);
             _getUser();
+
+            FirebaseFirestore.instance.collection('pasiens').doc(user!.uid).set({
+              'userOauth': value.status,
+            }, SetOptions(merge: true));
+
             FirebaseFirestore.instance.collection('booking').doc(user!.email).collection('pending').doc().set({
               'id': eventId,
               'link': joiningLink,
-              'name': currentTitle,
+              'title': currentTitle,
               'description': currentDesc,
               'psikiaterEmail': emails,
-              // 'psikiaterEmail': shared,
+              'psikiaterName': psikiaterName,
+              'psikiaterSpesialist': psikiaterSpesialist,
+              'psikiaterImage': psikiaterImage,
+              'pasienName': pasienName,
               'startTime': startTime,
               'endTime': endTime,
             }, SetOptions(merge: true));
@@ -88,10 +110,13 @@ class CalendarClient {
             FirebaseFirestore.instance.collection('booking').doc(user!.email).collection('all').doc().set({
               'id': eventId,
               'link': joiningLink,
-              'name': currentTitle,
+              'title': currentTitle,
               'description': currentDesc,
               'psikiaterEmail': emails,
-              // 'psikiaterEmail': shared,
+              'psikiaterName': psikiaterName,
+              'psikiaterSpesialist': psikiaterSpesialist,
+              'psikiaterImage': psikiaterImage,
+              'pasienName': pasienName,
               'startTime': startTime,
               'endTime': endTime,
             }, SetOptions(merge: true));
@@ -105,6 +130,8 @@ class CalendarClient {
       }
       return eventData;
     });
+    // }
+
     // return null;
   }
 

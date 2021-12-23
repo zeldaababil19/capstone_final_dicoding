@@ -258,6 +258,8 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
                                       builder: (context) => BookingScreen(
                                         psikiaterName: document['name'],
                                         psikiaterEmail: document['email'],
+                                        psikiaterSpesialist: document['spesialis'],
+                                        psikiaterImage: document['image'],
                                       ),
                                     ),
                                   );

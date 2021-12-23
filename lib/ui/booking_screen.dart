@@ -3,8 +3,16 @@ part of 'ui.dart';
 class BookingScreen extends StatefulWidget {
   final String psikiaterName;
   final String psikiaterEmail;
+  final String psikiaterSpesialist;
+  final String psikiaterImage;
 
-  const BookingScreen({Key? key, required this.psikiaterName, required this.psikiaterEmail}) : super(key: key);
+  const BookingScreen({
+    Key? key,
+    required this.psikiaterName,
+    required this.psikiaterEmail,
+    required this.psikiaterSpesialist,
+    required this.psikiaterImage,
+  }) : super(key: key);
   @override
   _BookingScreenState createState() => _BookingScreenState();
 }
@@ -23,13 +31,14 @@ class _BookingScreenState extends State<BookingScreen> {
 
   static const _scopes = [calendar.CalendarApi.calendarScope];
 
-  late String currentTitle = 'Halo Psikiater ' + widget.psikiaterName;
+  late String currentTitle = 'Halo Psikiater ';
   late String currentDesc = 'Konsultasi dengan pasien ' + user!.displayName!;
   late String psikiaterEmail = widget.psikiaterEmail;
   late String psikiaterName = widget.psikiaterName;
+  late String psikiaterSpesialist = widget.psikiaterSpesialist;
+  late String psikiaterImage = widget.psikiaterImage;
   late String pasienEmail = user!.email!;
   late String pasienName = user!.displayName!;
-  late String pasienPhone = user!.phoneNumber!;
   late String errorString = '';
   List<calendar.EventAttendee> attendeeEmails = [];
   // var fixedLengthList = List<String>.filled(1, '${psikiaterEmail}');
@@ -55,7 +64,7 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   void initState() {
     super.initState();
-    calendar.EventAttendee eventAttendee = new calendar.EventAttendee();
+    calendar.EventAttendee eventAttendee = calendar.EventAttendee();
     eventAttendee.email = psikiaterEmail;
     attendeeEmails.add(eventAttendee);
     _getUser();
@@ -606,72 +615,20 @@ class _BookingScreenState extends State<BookingScreen> {
                                             await calendarClient.insert(
                                               currentTitle: currentTitle,
                                               currentDesc: currentDesc,
+                                              psikiaterName: psikiaterName,
+                                              pasienName: user!.displayName!,
+                                              psikiaterSpesialist: psikiaterSpesialist,
+                                              psikiaterImage: psikiaterImage,
                                               attendeeEmailList: attendeeEmails,
                                               shouldNotifyAttendees: shouldNofityAttendees,
                                               hasConferenceSupport: hasConferenceSupport,
                                               startTime: DateTime.fromMillisecondsSinceEpoch(startTimeInEpoch),
                                               endTime: DateTime.fromMillisecondsSinceEpoch(endTimeInEpoch),
                                             );
-                                            //   .then((eventData) async {
-                                            // String? eventId = eventData!['id'];
-                                            // String? eventLink = eventData['link'];
-                                            // print('eventData');
-
-                                            // List<String> emails = [];
-
-                                            // for (int i = 0; i < attendeeEmails.length; i++) emails.add(attendeeEmails[i].email!);
-
-                                            // EventInfo eventInfo = EventInfo(
-                                            //   id: eventId!,
-                                            //   name: currentTitle,
-                                            //   description: currentDesc,
-                                            //   link: eventLink!,
-                                            //   attendeeEmails: emails,
-                                            //   shouldNotifyAttendees: shouldNofityAttendees,
-                                            //   hasConfereningSupport: hasConferenceSupport,
-                                            //   startTimeInEpoch: startTimeInEpoch,
-                                            //   endTimeInEpoch: endTimeInEpoch,
-                                            // );
-                                            print('kestore');
-                                            // await FirebaseFirestore.instance.collection('booking').doc(user.email).collection('pending').doc().set({
-                                            //   'id': eventId,
-                                            //   'link': eventLink,
-                                            //   'name': currentTitle,
-                                            //   'description': currentDesc,
-                                            //   'psikiaterEmail': emails,
-                                            //   'startTime': startTimeInEpoch,
-                                            //   'endTime': endTimeInEpoch,
-                                            // }, SetOptions(merge: true));
-
-                                            // FirebaseFirestore.instance.collection('booking').doc(user.email).collection('all').doc().set({
-                                            //   'id': eventId,
-                                            //   'link': eventLink,
-                                            //   'name': currentTitle,
-                                            //   'description': currentDesc,
-                                            //   'psikiaterEmail': emails,
-                                            //   'startTime': startTimeInEpoch,
-                                            //   'endTime': endTimeInEpoch,
-                                            // }, SetOptions(merge: true));
-                                            // await storage.storeEventData(eventInfo).whenComplete(() => Navigator.of(context).pop()).catchError(
-                                            //       (e) => print(e),
-                                            //     );
-                                            // }).catchError(
-                                            //   (e) => print(e),
-                                            // );
-
-                                            // setState(() {
-                                            //   isDataStorageInProgress = false;
-                                            // });
-                                            // } else {
-                                            //   setState(() {
-                                            //     isEditingTitle = true;
-                                            //     isEditingLink = true;
-                                            //   });
-                                            // }
                                           } else {
                                             setState(() {
                                               isErrorTime = true;
-                                              errorString = 'Invalid time! Please use a proper start and end time';
+                                              errorString = 'Kesalahan pemilihan waktu';
                                             });
                                           }
                                           // print(emails);
@@ -685,7 +642,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                         }
                                       },
                                       child: Text(
-                                        "Book Appointment",
+                                        "Booking Jadwal",
                                         style: GoogleFonts.lato(
                                           color: Colors.white,
                                           fontSize: 18,
