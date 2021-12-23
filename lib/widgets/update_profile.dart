@@ -77,7 +77,8 @@ class _UpdateProfile extends State<UpdateProfile> {
                         ),
                         filled: true,
                         fillColor: Colors.grey[350],
-                        hintStyle: fontTheme.bodyText1!.copyWith(color: Colors.grey)),
+                        hintText: widget.field,
+                        hintStyle: fontTheme.bodyText1!.copyWith(color: Colors.black)),
                     onFieldSubmitted: (String value) {
                       _textController.text = value;
                     },
@@ -122,6 +123,5 @@ class _UpdateProfile extends State<UpdateProfile> {
       // ignore: deprecated_member_use
       await user.updateProfile(displayName: _textController.text);
     }
-    if (widget.field.compareTo('phone') == 0) {}
   }
 }

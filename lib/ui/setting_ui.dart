@@ -120,8 +120,8 @@ class _SettingsState extends State<Setting> {
                 ),
                 child: TextButton(
                   onPressed: () async {
-                    Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
                     await _auth.signOut();
+                    Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
                     // setState(() {
                     //   _isSigningOut = true;
                     // });

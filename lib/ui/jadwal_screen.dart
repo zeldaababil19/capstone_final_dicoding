@@ -1,8 +1,6 @@
 part of 'ui.dart';
 
 class JadwalScreens extends StatefulWidget {
-  static const routeName = '/jadwal_screen';
-
   const JadwalScreens({Key? key}) : super(key: key);
 
   @override
@@ -17,6 +15,19 @@ class _JadwalScreensState extends State<JadwalScreens> {
     'Jadwalku',
     style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w900),
   );
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  User? user;
+
+  Future<void> _getUser() async {
+    user = _auth.currentUser!;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUser();
+  }
 
   @override
   Widget build(BuildContext context) {
