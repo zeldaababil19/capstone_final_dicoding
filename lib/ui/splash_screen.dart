@@ -2,12 +2,19 @@ part of 'ui.dart';
 
 class SplashScreenPage extends StatelessWidget {
   static const routeName = '/splash_Screen';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? user;
+
+  Future<void> _getUser() async {
+    user = _auth.currentUser!;
+  }
 
   @override
   Widget build(BuildContext context) {
+    // _getUser();
     return SplashScreen.timer(
       seconds: 3,
-      navigateAfterSeconds: user != null ? HomePage() : LoginPage(),
+      navigateAfterSeconds: user != null ? MainPage() : LoginPage(),
       // navigateAfterSeconds: LoginPage(),
       title: Text(
         "Halo Psikiater",
@@ -25,9 +32,9 @@ class SplashScreenPage extends StatelessWidget {
   }
 
   Route _createRoute() {
-    late User? user = FirebaseAuth.instance.currentUser;
+    // _getUser();
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => user != null ? HomePage() : LoginPage(),
+      pageBuilder: (context, animation, secondaryAnimation) => user != null ? MainPage() : LoginPage(),
       // pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);

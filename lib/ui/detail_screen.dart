@@ -168,7 +168,7 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('Alamat', style: fontTheme.bodyText1),
+                                      Text('address', style: fontTheme.bodyText1),
                                       Text(document['address']),
                                     ],
                                   ),
@@ -246,11 +246,18 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
                                   ),
                                 ),
                                 onPressed: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => BookingFakeScreen(),
+                                  //   ),
+                                  // );
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => BookingScreen(
-                                        psikiater: document['name'],
+                                        psikiaterName: document['name'],
+                                        psikiaterEmail: document['email'],
                                       ),
                                     ),
                                   );
@@ -285,7 +292,6 @@ class _PsikiaterProfileState extends State<PsikiaterProfile> {
             );
           },
         ),
-      
       ),
     );
   }

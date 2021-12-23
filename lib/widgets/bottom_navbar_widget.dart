@@ -63,8 +63,8 @@ class _NavBarWidgetState extends State<NavBarWidget> {
                 activeIcon: 'assets/images/profile_active.png',
               ),
             ],
-            onTap: (index) {
-              navigation.changeIndex(index);
+            onTap: (context) {
+              navigation.changeIndex(context);
             },
             selectedLabelStyle: fontTheme.bodyText2?.copyWith(
               color: accentColor,

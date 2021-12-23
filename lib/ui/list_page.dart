@@ -13,7 +13,7 @@ class _ListPageState extends State<ListPage> {
   TextEditingController _psikiaterController = TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   Icon _searchIcon = const Icon(Icons.search);
-  Icon _user_md = const Icon(Plus.user_md);
+  Icon _user_md = const Icon(Plus.userMd);
   Widget _appBar = Text(
     'List Psikiater',
     style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w900),
@@ -43,7 +43,7 @@ class _ListPageState extends State<ListPage> {
       key: _key,
       appBar: AppBar(
         title: _appBar,
-        leading: Icon(Plus.user_md),
+        leading: Icon(Plus.userMd),
         actions: <Widget>[
           IconButton(
             icon: _searchIcon,
@@ -69,13 +69,23 @@ class _ListPageState extends State<ListPage> {
       () {
         if (_searchIcon.icon == Icons.search) {
           _searchIcon = Icon(Icons.close);
-          _appBar = TextField(
+          _appBar = TextFormField(
             controller: _psikiaterController,
             cursorColor: Colors.white,
-            decoration: InputDecoration(hintText: 'Cari nama Psikiater'),
+            decoration: InputDecoration(
+              hintText: 'Cari nama Psikiater',
+            ),
             onChanged: (query) => {
               if (query != '')
                 {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchList(
+                        searchKey: query,
+                      ),
+                    ),
+                  ),
                   // provider.getRestaurantSearch(query),
                 }
             },

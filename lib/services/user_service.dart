@@ -3,8 +3,8 @@ part of 'service.dart';
 final FirebaseFirestore _firebase = FirebaseFirestore.instance;
 final CollectionReference _userDet = _firebase.collection('user');
 final FirebaseAuth auth = FirebaseAuth.instance;
-final User? user = auth.currentUser;
-// user!.uid;
+final User user = auth.currentUser!;
+// user.uid;
 
 class UserService {
   // static String? userUid;
@@ -12,18 +12,18 @@ class UserService {
   static Future<void> addUserDet({
     required String nama,
     required String email,
-    required int noHp,
-    required String ttgl,
-    required dynamic jekel,
+    required int phone,
+    required String birthDate,
+    required dynamic gender,
   }) async {
-    DocumentReference document = _userDet.doc(user!.uid).collection('data').doc();
+    DocumentReference document = _userDet.doc(user.uid).collection('data').doc();
 
     Map<String, dynamic> data = <String, dynamic>{
       "nama": nama,
       "email": email,
-      "noHp": noHp,
-      " ttgl": ttgl,
-      "jekel": jekel,
+      "phone": phone,
+      " birthDate": birthDate,
+      "gender": gender,
     };
 
     await document
@@ -37,7 +37,7 @@ class UserService {
   }
 
   static Stream readUserDet() {
-    CollectionReference userDetail = _userDet.doc(user!.uid).collection('data');
+    CollectionReference userDetail = _userDet.doc(user.uid).collection('data');
 
     return userDetail.snapshots();
   }
@@ -46,33 +46,33 @@ class UserService {
     return UserDetailed(
       name: snapshot['name'],
       email: snapshot['email'],
-      jekel: snapshot['jekel'],
-      noHp: snapshot['noHp'],
+      gender: snapshot['gender'],
+      phone: snapshot['phone'],
       pictureId: snapshot['pictureId'],
-      ttgl: snapshot['ttgl'],
+      birthDate: snapshot['birthDate'],
     );
   }
 
   Stream<UserDetailed> get userData {
-    return _userDet.doc(user!.uid).collection('data').doc().snapshots().map(_userDataFromSnapshot);
+    return _userDet.doc(user.uid).collection('data').doc().snapshots().map(_userDataFromSnapshot);
   }
 
   static Future<void> updateUserDet({
     required String nama,
     required String email,
-    required int noHp,
-    required String ttgl,
-    required dynamic jekel,
+    required int phone,
+    required String birthDate,
+    required dynamic gender,
     required String idDoc,
   }) async {
-    DocumentReference document = _userDet.doc(user!.uid).collection('data').doc(idDoc);
+    DocumentReference document = _userDet.doc(user.uid).collection('data').doc(idDoc);
 
     Map<String, dynamic> data = <String, dynamic>{
       "nama": nama,
       "email": email,
-      "noHp": noHp,
-      " ttgl": ttgl,
-      "jekel": jekel,
+      "phone": phone,
+      " birthDate": birthDate,
+      "gender": gender,
     };
 
     await document

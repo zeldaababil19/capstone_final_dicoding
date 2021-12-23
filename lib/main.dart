@@ -13,7 +13,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   late User user;
 
   Future<void> _getUser() async {
@@ -22,18 +22,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _getUser();
     return MultiProvider(
       providers: appProvider,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Halo Psikiater',
         theme: ThemeData(textTheme: fontTheme, primarySwatch: Colors.blue, visualDensity: VisualDensity.adaptivePlatformDensity),
-        initialRoute: SplashScreenPage.routeName,
+        initialRoute: '/',
         routes: {
-          SplashScreenPage.routeName: (context) => SplashScreenPage(),
+          // '/': (context) => user == null ? SplashScreenPage() : MainPage(),
+          '/': (context) => SplashScreenPage(),
+          '/login': (context) => LoginPage(),
+          '/home': (context) => MainPage(),
+          '/profile': (context) => UserInfoScreen(),
+          '/booking': (context) => MyBooking(),
+          '/history': (context) => HistoriScreens()
+          // '/PsikiaterProfile': (context) => PsikiaterProfile(psikiater: psikiater['name']),
+          // SplashScreenPage.routeName: (context) => SplashScreenPage(),
           // LoginPage.routeName: (context) => LoginPage(),
           // RegisterPage.routeName: (context) => RegisterPage(),
-          HomePage.routeName: (context) => HomePage(),
+          // MainPage.routeName: (context) => MainPage(),
+          // HomePage.routeName: (context) => HomePage(),
           // UserInfoScreen.routeName: (context) => UserInfoScreen(user: user),
           // JadwalScreens.routeName: (context) => JadwalScreens(),
           //Psikiatercreens.routename: (context) => Psikiater

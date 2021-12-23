@@ -23,29 +23,29 @@ class _SettingsState extends State<Setting> {
     // _getUser();
   }
 
-  bool _isSigningOut = false;
+  // bool _isSigningOut = false;
 
-  Route _routeToSignInScreen() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(-1.0, 0.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
-        var tween = Tween(
-          begin: begin,
-          end: end,
-        ).chain(
-          CurveTween(curve: curve),
-        );
+  // Route _routeToSignInScreen() {
+  //   return PageRouteBuilder(
+  //     pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+  //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+  //       var begin = Offset(-1.0, 0.0);
+  //       var end = Offset.zero;
+  //       var curve = Curves.ease;
+  //       var tween = Tween(
+  //         begin: begin,
+  //         end: end,
+  //       ).chain(
+  //         CurveTween(curve: curve),
+  //       );
 
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
+  //       return SlideTransition(
+  //         position: animation.drive(tween),
+  //         child: child,
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -120,14 +120,16 @@ class _SettingsState extends State<Setting> {
                 ),
                 child: TextButton(
                   onPressed: () async {
-                    setState(() {
-                      _isSigningOut = true;
-                    });
-                    await Authentication.signOut(context: context);
-                    setState(() {
-                      _isSigningOut = false;
-                    });
-                    Navigator.of(context).pushReplacement(_routeToSignInScreen());
+                    Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+                    await _auth.signOut();
+                    // setState(() {
+                    //   _isSigningOut = true;
+                    // });
+                    // await Authentication.signOut(context: context);
+                    // setState(() {
+                    //   _isSigningOut = false;
+                    // });
+                    // Navigator.of(context).pushReplacement(_routeToSignInScreen());
                     // Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
                     // _signOut();
                   },
