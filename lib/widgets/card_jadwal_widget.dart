@@ -114,6 +114,7 @@ class _JadwalCardWidgetState extends State<JadwalCardWidget> {
                   ),
                 )
               : ListView.builder(
+                  physics: ClampingScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: snapshot.data!.size,

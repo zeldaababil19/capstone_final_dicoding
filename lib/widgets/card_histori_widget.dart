@@ -63,6 +63,7 @@ class _HistoriCardWidgetState extends State<HistoriCardWidget> {
                   ),
                 )
               : ListView.builder(
+                  physics: ClampingScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: snapshot.data!.size,

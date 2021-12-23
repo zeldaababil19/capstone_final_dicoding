@@ -89,7 +89,7 @@ class _ProfileSettingsState extends State<ProfileSetting> {
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       children: List.generate(
-                        6,
+                        7,
                         (index) => Container(
                           margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           child: InkWell(
