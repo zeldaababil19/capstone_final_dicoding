@@ -40,7 +40,7 @@ class _JadwalCardWidgetState extends State<JadwalCardWidget> {
     await FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
       // await myTransaction.delete(snapshot.data.documents[index].reference);
     });
-    return FirebaseFirestore.instance.collection('appointments').doc(user!.email.toString()).collection('pending').doc(docID).delete().then((_) => print('Deleted')).catchError((error) => print('Delete failed: $error'));
+    return FirebaseFirestore.instance.collection('appointments').doc(user!.email.toString()).collection('pending').doc(docID).delete().then((_) => print('Deleted ' + docID)).catchError((error) => print('Delete failed: $error'));
   }
 
   showAlertDialog(BuildContext context) {
@@ -123,9 +123,9 @@ class _JadwalCardWidgetState extends State<JadwalCardWidget> {
                   itemCount: snapshot.data!.size,
                   itemBuilder: (context, index) {
                     DocumentSnapshot document = snapshot.data!.docs[index];
-                    if (_checkDiff(document['startTime'].toDate())) {
-                      deleteBooking(document.id);
-                    }
+                    // if (_checkDiff(document['startTime'].toDate())) {
+                    //   deleteBooking(document.id);
+                    // }
                     return GestureDetector(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
