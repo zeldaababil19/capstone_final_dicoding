@@ -45,8 +45,6 @@ happy to user 🥑
 https://drive.google.com/file/d/1Vb62hQkZklvOMbQjj8hFGpAsI5qd-nJ3/view?usp=sharing 
 
 ## Preview Aplikasi
-SplashScreen | Add Page | Create Poll | 
-:----------:|:----------:|:----------:|
-<img src="https://github.com/zeldaababil19/capstone_final_dicoding/blob/v2/screenshot/Screenshot_20211224-014242_capstone_final.png"
+
 
 
