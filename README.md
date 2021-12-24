@@ -38,8 +38,7 @@ lalu jalankan perintah ini untuk menginstall package
 ```bash
         flutter pub get
 ```
-install apk dan pilih tetap install(terdeteksi oleh play protek karena mengunakan permission event calendar)
-happy to user 🥑
+install apk dan pilih tetap install(terdeteksi oleh play protek karena mengunakan permission event calendar) 🥑
 
 ## How to Use
 https://drive.google.com/file/d/1Vb62hQkZklvOMbQjj8hFGpAsI5qd-nJ3/view?usp=sharing 
