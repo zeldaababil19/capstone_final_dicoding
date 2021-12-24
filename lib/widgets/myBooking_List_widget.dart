@@ -108,8 +108,8 @@ class _MyBookingListWidgetState extends State<MyBookingListWidget> {
                   ),
                 )
               : ListView.builder(
-                  scrollDirection: Axis.vertical,
                   physics: ClampingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: snapshot.data!.size,
                   itemBuilder: (context, index) {

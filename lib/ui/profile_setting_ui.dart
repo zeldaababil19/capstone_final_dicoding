@@ -16,7 +16,6 @@ class _ProfileSettingsState extends State<ProfileSetting> {
   }
 
   List labelName = [
-    'Photo',
     'Name',
     'Email',
     'Jenis Kelamin',
@@ -26,7 +25,6 @@ class _ProfileSettingsState extends State<ProfileSetting> {
   ];
 
   List value = [
-    'image',
     'name',
     'email',
     'gender',
@@ -39,6 +37,32 @@ class _ProfileSettingsState extends State<ProfileSetting> {
   void initState() {
     super.initState();
     _getUser();
+  }
+
+  File? _imageFile = null;
+
+  final picker = ImagePicker();
+
+  Future pickImage() async {
+    // ignore: deprecated_member_use
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      _imageFile = File(pickedFile!.path);
+    });
+  }
+
+  Future uploadImageToFirebase(BuildContext context) async {
+    String fileName = p.basename(_imageFile!.path);
+    Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('uploads').child('/$fileName');
+
+    final metadata = firebase_storage.SettableMetadata(contentType: 'image/jpeg', customMetadata: {'picked-file-path': fileName});
+    firebase_storage.UploadTask uploadTask;
+    //late StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFile);
+    uploadTask = ref.putFile(File(_imageFile!.path), metadata);
+
+    firebase_storage.UploadTask task = await Future.value(uploadTask);
+    Future.value(uploadTask).then((value) => {print("Upload file path ${value.ref.fullPath}")}).onError((error, stackTrace) => {print("Upload file path error ${error.toString()} ")});
   }
 
   @override
@@ -83,60 +107,116 @@ class _ProfileSettingsState extends State<ProfileSetting> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
 
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: ListView(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      children: List.generate(
-                        6,
-                        (index) => Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          child: InkWell(
-                            splashColor: Colors.grey.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(10),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UpdateProfile(
-                                            label: labelName[index],
-                                            field: value[index],
-                                          )));
-                            },
-                            child: Container(
-                              height: MediaQuery.of(context).size.height / 14,
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                color: whiteColor,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(color: greyColor.withOpacity(0.8), blurRadius: 8, offset: Offset(0, 3), spreadRadius: 2),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      labelName[index],
-                                      style: fontTheme.subtitle2!.copyWith(
-                                        color: blackColor,
-                                      ),
-                                    ),
-                                    Text(
-                                      data[value[index]]?.isEmpty ?? true ? 'belum ada' : data[value[index]],
-                                      style: fontTheme.subtitle2,
-                                    ),
+                  return Column(
+                    children: [
+                      // Stack(children: [
+                      //   Container(
+                      //     child: Column(
+                      //       children: [
+                      //         user!.photoURL != null
+                      //             ? ClipOval(
+                      //                 child: Material(
+                      //                   color: Colors.blue,
+                      //                   child: Image.network(
+                      //                     user!.photoURL!,
+                      //                     fit: BoxFit.fitHeight,
+                      //                   ),
+                      //                 ),
+                      //               )
+                      //             : ClipOval(
+                      //                 child: Material(
+                      //                   child: Padding(
+                      //                     padding: const EdgeInsets.all(26.0),
+                      //                     child: Icon(
+                      //                       Icons.person,
+                      //                       size: 90,
+                      //                       color: Colors.blue,
+                      //                     ),
+                      //                   ),
+                      //                 ),
+                      //               ),
+                      //       ],
+                      //     ),
+                      //     decoration: BoxDecoration(
+                      //         border: Border.all(
+                      //           color: Colors.blue,
+                      //           width: 5,
+                      //         ),
+                      //         shape: BoxShape.circle),
+                      //   ),
+                      //   Container(
+                      //     child: IconButton(
+                      //       onPressed: () {
+                      //         pickImage;
+                      //       },
+                      //       icon: FaIcon(
+                      //         FontAwesomeIcons.cog,
+                      //         color: blackColor,
+                      //         size: 30,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ]),
+                      // ElevatedButton(
+                      //   onPressed: () => uploadImageToFirebase(context),
+                      //   child: Text(
+                      //     "Upload Image",
+                      //     style: TextStyle(fontSize: 20, color: Colors.white),
+                      //   ),
+                      // ),
+                      ListView(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        children: List.generate(
+                          6,
+                          (index) => Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            child: InkWell(
+                              splashColor: Colors.grey.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(10),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UpdateProfile(
+                                              label: labelName[index],
+                                              field: value[index],
+                                            )));
+                              },
+                              child: Container(
+                                height: MediaQuery.of(context).size.height / 14,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  color: whiteColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(color: greyColor.withOpacity(0.8), blurRadius: 8, offset: Offset(0, 3), spreadRadius: 2),
                                   ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        labelName[index],
+                                        style: fontTheme.subtitle2!.copyWith(
+                                          color: blackColor,
+                                        ),
+                                      ),
+                                      Text(
+                                        data[value[index]]?.isEmpty ?? true ? 'belum ada' : data[value[index]],
+                                        style: fontTheme.subtitle2,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   );
                 }
                 return Center(

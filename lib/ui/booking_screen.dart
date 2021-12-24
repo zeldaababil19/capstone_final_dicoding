@@ -95,43 +95,6 @@ class _BookingScreenState extends State<BookingScreen> {
     }
   }
 
-  // Future<void> selectDate(BuildContext context) async {
-  //   showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime(2021),
-  //     lastDate: DateTime(2025),
-  //   ).then(
-  //     (date) {
-  //       setState(
-  //         () {
-  //           selectedDate = date!;
-  //           String formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
-  //           _dateController.text = formattedDate;
-  //           dateUTC = DateFormat('yyyy-MM-dd').format(selectedDate);
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Future<void> selectTime(BuildContext context) async {
-  //   TimeOfDay? selectedTime = await showTimePicker(
-  //     context: context,
-  //     initialTime: currentTime,
-  //   );
-
-  //   MaterialLocalizations localizations = MaterialLocalizations.of(context);
-  //   String formattedTime = localizations.formatTimeOfDay(selectedTime!, alwaysUse24HourFormat: false);
-
-  //   if (formattedTime != null) {
-  //     setState(() {
-  //       timeText = formattedTime;
-  //       _timeController.text = timeText;
-  //     });
-  //   }
-  //   date_Time = selectedTime.toString().substring(10, 15);
-  // }
   _selectStartTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -167,32 +130,26 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   showAlertDialog(BuildContext context) {
-    // set up the button
     Widget okButton = TextButton(
       child: Text(
         "OK",
         style: GoogleFonts.lato(fontWeight: FontWeight.bold),
       ),
       onPressed: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MyBooking(),
-          ),
-        );
+        Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
       },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text(
-        "Done!",
+        "Selesai!",
         style: GoogleFonts.lato(
           fontWeight: FontWeight.bold,
         ),
       ),
       content: Text(
-        "Appointment is registered.",
+        "Berhasil membuat jadwal",
         style: GoogleFonts.lato(),
       ),
       actions: [
@@ -534,9 +491,6 @@ class _BookingScreenState extends State<BookingScreen> {
                                           if (value!.isEmpty) return 'Please Enter the Time';
                                           return null;
                                         },
-                                        // onFieldSubmitted: (String value) {
-                                        //   f2.unfocus();
-                                        // },
                                         textInputAction: TextInputAction.next,
                                         style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
@@ -546,7 +500,6 @@ class _BookingScreenState extends State<BookingScreen> {
                                           child: Material(
                                             color: Colors.indigo, // button color
                                             child: InkWell(
-                                              // inkwell color
                                               child: SizedBox(
                                                 width: 40,
                                                 height: 40,
@@ -582,10 +535,6 @@ class _BookingScreenState extends State<BookingScreen> {
                                       ),
                                       onPressed: () async {
                                         if (_formKey.currentState!.validate()) {
-                                          // calendar.EventAttendee eventAttendee = new calendar.EventAttendee();
-                                          // eventAttendee.email = psikiaterEmail;
-                                          // attendeeEmails.add(eventAttendee);
-
                                           int startTimeInEpoch = DateTime(
                                             selectedDate.year,
                                             selectedDate.month,
@@ -631,14 +580,25 @@ class _BookingScreenState extends State<BookingScreen> {
                                               errorString = 'Kesalahan pemilihan waktu';
                                             });
                                           }
-                                          // print(emails);
+                                          await calendarClient.insert(
+                                            currentTitle: currentTitle,
+                                            currentDesc: currentDesc,
+                                            psikiaterName: psikiaterName,
+                                            pasienName: user!.displayName!,
+                                            psikiaterSpesialist: psikiaterSpesialist,
+                                            psikiaterImage: psikiaterImage,
+                                            attendeeEmailList: attendeeEmails,
+                                            shouldNotifyAttendees: shouldNofityAttendees,
+                                            hasConferenceSupport: hasConferenceSupport,
+                                            startTime: DateTime.fromMillisecondsSinceEpoch(startTimeInEpoch),
+                                            endTime: DateTime.fromMillisecondsSinceEpoch(endTimeInEpoch),
+                                          );
                                           print(textControllerDate.text);
                                           print(textControllerStartTime.text);
                                           print(textControllerEndTime.text);
                                           print(widget.psikiaterName);
                                           print(user!.displayName);
-
-                                          // _createAppointment();
+                                          showAlertDialog(context);
                                         }
                                       },
                                       child: Text(
@@ -651,28 +611,6 @@ class _BookingScreenState extends State<BookingScreen> {
                                       ),
                                     ),
                                   ),
-                                  // child: Container(
-                                  //   width: double.maxFinite,
-                                  //   child: ElevatedButton(
-                                  //     onPressed: () {
-                                  //       if (_formKey.currentState!.validate()) {
-                                  //         print(_dateController.text);
-                                  //         print(_timeController.text);
-                                  //         print(widget.psikiaterName);
-                                  //         print(user.displayName);
-                                  //         _createAppointment();
-                                  //       }
-                                  //     },
-                                  //     child: Text(
-                                  //       "Booking Psikiater",
-                                  //       style: GoogleFonts.lato(
-                                  //         color: Colors.white,
-                                  //         fontSize: 18,
-                                  //         fontWeight: FontWeight.bold,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
                                 ),
                               ]),
                             ),
@@ -686,73 +624,5 @@ class _BookingScreenState extends State<BookingScreen> {
             }),
       ),
     );
-  }
-
-  Future<void> _createAppointment() async {
-    // String calendarId = "primary";
-    // calendar.Event event = calendar.Event();
-
-    // event.summary = currentTitle;
-    // event.description = currentDesc;
-    // // event.attendees = attendeeEmailList;
-
-    // // if (hasConferenceSupport) {
-    // calendar.ConferenceData conferenceData = calendar.ConferenceData();
-    // calendar.CreateConferenceRequest conferenceRequest = calendar.CreateConferenceRequest();
-    // conferenceRequest.requestId = "${date_Time}";
-    // conferenceData.createRequest = conferenceRequest;
-
-    // event.conferenceData = conferenceData;
-    // // }
-
-    // calendar.EventDateTime start = calendar.EventDateTime();
-    // start.dateTime = date_Time as DateTime?;
-    // start.timeZone = "GMT+05:30";
-    // event.start = start;
-
-    // EventDateTime end = new EventDateTime();
-    // end.timeZone = "GMT+05:30";
-    // end.dateTime = endTime;
-    // event.end = end;
-
-    // try {
-    //   await calendar.events.insert(event, calendarId, conferenceDataVersion: 1, sendUpdates: "all").then((value) {
-    //     print("Event Status: ${value.status}");
-    //     if (value.status == "confirmed") {
-    //       // String joiningLink;
-    //       // String eventId;
-
-    //       eventId = value.id;
-    //       joiningLink = "https://meet.google.com/${value.conferenceData.conferenceId}";
-
-    //       eventData = {'id': eventId, 'link': joiningLink};
-
-    //       print('Event added to Google Calendar');
-    //     } else {
-    //       print("Unable to add event to Google Calendar");
-    //     }
-    //   });
-    // } catch (e) {
-    //   print('Error creating event $e');
-    // }
-
-    // print(dateUTC + ' ' + date_Time + ':00');
-    FirebaseFirestore.instance.collection('booking').doc(user!.email).collection('pending').doc().set({
-      // 'id': eventId,
-      // 'link': joiningLink,
-      'name': currentTitle,
-      'description': currentDesc,
-      // 'psikiaterEmail': psikiaterEmail,
-      // 'date': DateTime.parse(dateUTC + ' ' + date_Time + ':00'),
-    }, SetOptions(merge: true));
-
-    FirebaseFirestore.instance.collection('booking').doc(user!.email).collection('all').doc().set({
-      // 'id': eventId,
-      // 'link': joiningLink,
-      'name': currentTitle,
-      'description': currentDesc,
-      // 'psikiaterEmail': psikiaterEmail,
-      // 'date': DateTime.parse(dateUTC + ' ' + date_Time + ':00'),
-    }, SetOptions(merge: true));
   }
 }

@@ -20,6 +20,7 @@ class _RegisterPageState extends State<RegisterPage> {
   FocusNode f4 = FocusNode();
 
   late bool _isSuccess;
+  late bool _isHidden = true;
 
   @override
   Widget build(BuildContext context) {
@@ -168,8 +169,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               focusNode: f3,
                               controller: _passwordController,
-                              obscureText: true,
+                              obscureText: _isHidden,
                               decoration: InputDecoration(
+                                suffix: InkWell(
+                                  onTap: _togglePasswordView,
+                                  child: Icon(
+                                    _isHidden ? Icons.visibility : Icons.visibility_off,
+                                  ),
+                                ),
                                 hintText: 'Masukkan Password',
                                 fillColor: baseColor,
                                 filled: true,
@@ -218,8 +225,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               focusNode: f4,
                               controller: _passwordConfirmController,
-                              obscureText: true,
+                              obscureText: _isHidden,
                               decoration: InputDecoration(
+                                suffix: InkWell(
+                                  onTap: _togglePasswordView,
+                                  child: Icon(
+                                    _isHidden ? Icons.visibility : Icons.visibility_off,
+                                  ),
+                                ),
                                 hintText: 'Konfirmasi password',
                                 fillColor: baseColor,
                                 filled: true,
@@ -430,7 +443,7 @@ class _RegisterPageState extends State<RegisterPage> {
         'birthDate': null,
         'email': user.email,
         'phone': null,
-        'alamat': null,
+        'address': null,
         'image': null,
         'gender': null,
       }, SetOptions(merge: true));
@@ -456,5 +469,11 @@ class _RegisterPageState extends State<RegisterPage> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  void _togglePasswordView() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
   }
 }

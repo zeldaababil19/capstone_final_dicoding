@@ -36,8 +36,11 @@ class _JadwalCardWidgetState extends State<JadwalCardWidget> {
     return formattedTime;
   }
 
-  Future<void> deleteBooking(String docID) {
-    return FirebaseFirestore.instance.collection('appointments').doc(user!.email.toString()).collection('pending').doc(docID).delete();
+  Future<void> deleteBooking(String docID) async {
+    await FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
+      // await myTransaction.delete(snapshot.data.documents[index].reference);
+    });
+    return FirebaseFirestore.instance.collection('appointments').doc(user!.email.toString()).collection('pending').doc(docID).delete().then((_) => print('Deleted ' + docID)).catchError((error) => print('Delete failed: $error'));
   }
 
   showAlertDialog(BuildContext context) {
@@ -114,14 +117,15 @@ class _JadwalCardWidgetState extends State<JadwalCardWidget> {
                   ),
                 )
               : ListView.builder(
+                  physics: ClampingScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: snapshot.data!.size,
                   itemBuilder: (context, index) {
                     DocumentSnapshot document = snapshot.data!.docs[index];
-                    if (_checkDiff(document['startTime'].toDate())) {
-                      deleteBooking(document.id);
-                    }
+                    // if (_checkDiff(document['startTime'].toDate())) {
+                    //   deleteBooking(document.id);
+                    // }
                     return GestureDetector(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
@@ -296,9 +300,40 @@ class _JadwalCardWidgetState extends State<JadwalCardWidget> {
                                                 height: 25,
                                                 child: ElevatedButton(
                                                   onPressed: () {
-                                                    print(">>>>>>>>>" + document.id);
-                                                    _documentID = document.id;
-                                                    showAlertDialog(context);
+                                                    AlertDialog alert = AlertDialog(
+                                                      title: Text("Konfirmasi Hapus"),
+                                                      content: Text("Yakin ingin menghapus?", style: fontTheme.subtitle1),
+                                                      actions: [
+                                                        TextButton(
+                                                          child: Text("Tidak"),
+                                                          onPressed: () {
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                        ),
+                                                        TextButton(
+                                                          child: Text("Ya"),
+                                                          onPressed: () async {
+                                                            _documentID = document.id;
+                                                            print("hapus id " + _documentID!);
+                                                            await FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
+                                                              await myTransaction.delete(snapshot.data!.docs[index].reference);
+                                                            });
+                                                            deleteBooking(_documentID!);
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return alert;
+                                                      },
+                                                    );
+                                                    // print(">>>>>>>>>" + document.id);
+                                                    // _documentID = document.id;
+                                                    // showAlertDialog(context);
                                                   },
                                                   child: Text(
                                                     'Batalkan',

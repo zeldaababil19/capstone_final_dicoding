@@ -18,8 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   FocusNode f2 = FocusNode();
   FocusNode f3 = FocusNode();
 
-  // bool _obscureText = true;
-  // bool _isLoading = false;
+  late bool _isHidden = true;
 
   @override
   Widget build(BuildContext context) {
@@ -126,8 +125,14 @@ class _LoginPageState extends State<LoginPage> {
                                 child: TextFormField(
                                   focusNode: f2,
                                   controller: _passwordController,
-                                  obscureText: true,
+                                  obscureText: _isHidden,
                                   decoration: InputDecoration(
+                                    suffix: InkWell(
+                                      onTap: _togglePasswordView,
+                                      child: Icon(
+                                        _isHidden ? Icons.visibility : Icons.visibility_off,
+                                      ),
+                                    ),
                                     hintText: 'Masukkan Password',
                                     fillColor: baseColor,
                                     filled: true,
@@ -274,13 +279,6 @@ class _LoginPageState extends State<LoginPage> {
         await user.sendEmailVerification();
       }
       Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-      // Navigator.of(context).pushReplacement(
-      //   MaterialPageRoute(
-      //     // builder: (context) => UserInfoScreen(user: user),
-      //     // builder: (context) => HomePage(),
-      //     builder: (context) => MainPage(),
-      //   ),
-      // );
     } catch (e) {
       final snackbar = SnackBar(
         content: Expanded(
@@ -307,5 +305,11 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => page),
     );
+  }
+
+  void _togglePasswordView() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
   }
 }

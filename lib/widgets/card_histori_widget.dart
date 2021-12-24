@@ -45,7 +45,7 @@ class _HistoriCardWidgetState extends State<HistoriCardWidget> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('booking').doc(user!.email.toString()).collection('pending').orderBy('startTime').snapshots(),
+        stream: FirebaseFirestore.instance.collection('booking').doc(user!.email.toString()).collection('all').orderBy('startTime').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -63,6 +63,7 @@ class _HistoriCardWidgetState extends State<HistoriCardWidget> {
                   ),
                 )
               : ListView.builder(
+                  physics: ClampingScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: snapshot.data!.size,
