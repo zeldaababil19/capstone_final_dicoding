@@ -580,19 +580,21 @@ class _BookingScreenState extends State<BookingScreen> {
                                               errorString = 'Kesalahan pemilihan waktu';
                                             });
                                           }
-                                          await calendarClient.insert(
-                                            currentTitle: currentTitle,
-                                            currentDesc: currentDesc,
-                                            psikiaterName: psikiaterName,
-                                            pasienName: user!.displayName!,
-                                            psikiaterSpesialist: psikiaterSpesialist,
-                                            psikiaterImage: psikiaterImage,
-                                            attendeeEmailList: attendeeEmails,
-                                            shouldNotifyAttendees: shouldNofityAttendees,
-                                            hasConferenceSupport: hasConferenceSupport,
-                                            startTime: DateTime.fromMillisecondsSinceEpoch(startTimeInEpoch),
-                                            endTime: DateTime.fromMillisecondsSinceEpoch(endTimeInEpoch),
-                                          );
+
+                                          /// aktifkan ini jika tidak bisa booking
+                                          // await calendarClient.insert(
+                                          //   currentTitle: currentTitle,
+                                          //   currentDesc: currentDesc,
+                                          //   psikiaterName: psikiaterName,
+                                          //   pasienName: user!.displayName!,
+                                          //   psikiaterSpesialist: psikiaterSpesialist,
+                                          //   psikiaterImage: psikiaterImage,
+                                          //   attendeeEmailList: attendeeEmails,
+                                          //   shouldNotifyAttendees: shouldNofityAttendees,
+                                          //   hasConferenceSupport: hasConferenceSupport,
+                                          //   startTime: DateTime.fromMillisecondsSinceEpoch(startTimeInEpoch),
+                                          //   endTime: DateTime.fromMillisecondsSinceEpoch(endTimeInEpoch),
+                                          // );
                                           print(textControllerDate.text);
                                           print(textControllerStartTime.text);
                                           print(textControllerEndTime.text);
