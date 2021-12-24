@@ -56,6 +56,13 @@ dependencies:
   image_picker: ^0.8.4+4
   firebase_storage: ^10.2.4
 
+dev_dependencies:
+  flutter_launcher_icons: ^0.9.2
+
+flutter_icons:
+  android: true
+  image_path: "assets/images/splashscreen.png"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
