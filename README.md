@@ -1,45 +1,40 @@
-# capstone_final
+# Capstone Project Dicoding X SIB Kampus merdeka
+
 # Halo Psikiater
 ## tema : Kesehatan diri dan mental 
 
-Team ID
-: CSD-162
+## Team ID : CSD-162
 
-Mentor : Fikri
+### Mentor : Fikri
 
-Member : 1. P263R4251 - Muhammad Hilmi Azriel Ariq
-2. P354R4386 - Zelda Ababil
+### Member : 
+ - 1. P263R4251 - Muhammad Hilmi Azriel Ariq
+ - 2. P354R4386 - Zelda Ababil
 
+## Project Scope & Deliverables: 
 Garis besar proyek dan milestone pada aplikasi ini yaitu aplikasi untuk mempertemukan
 seorang psikolog atau psikiater dengan pasien secara online atau daring melalui platform
 google meet yang digenerate secara langsung. Sehingga dengan adanya meeting online ini dapat
 meminimalisir penyebaran virus covid-19.
-Adapun fitur-fitur pada aplikasi ini yaitu:
-1. Splash Screen
-2. Register/login
-3. Halaman utama berisi list psikiater
-4. Fitur booking jadwal psikiater
-5. Halaman history
-6. Halaman pengguna
 
-Aplikasi ini tentunya membutuhkan sumberdaya yang dibutuhkan agar dapat mendukung
-kelancaran pembuatan aplikasi ini. Adapun sumber daya yang dibutuhkan antara lain:
-Bahasa pemrograman: Dart
-Framework: Flutter
-Api: Google Meet API
+## Features
+- Register/login
+- Halaman utama berisi list psikiater
+- Fitur booking jadwal psikiater terintergrasi dengan google calendar dan google meet
+- Halaman history
+- Halaman pengguna
 
+  <a href="https://flutter.dev/"><img alt="Platform" src="https://img.shields.io/badge/Framework-Flutter-blue.svg"></a>
+  <a href="https://dart.dev/"><img alt="Dart" src="https://img.shields.io/badge/dart-2.15.0-blue.svg"></a>
+  <a href="https://developers.google.com/apis-explorer/"><img alt="Api" src="https://img.shields.io/badge/Api-Google%20Calendar-blue.svg"></a>
 
-A new Flutter project.
+## Instalation
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+download project atau clone repo dan jalankan perintah ini
+```  bash
+       git clone https://github.com/zeldaababil19/capstone_final_dicoding.git
+``` 
+lalu jalankan perintah ini untuk menginstall package
+```bash
+        flutter pub get
+```
