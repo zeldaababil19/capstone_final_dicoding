@@ -443,7 +443,7 @@ class _RegisterPageState extends State<RegisterPage> {
         'birthDate': null,
         'email': user.email,
         'phone': null,
-        'alamat': null,
+        'address': null,
         'image': null,
         'gender': null,
       }, SetOptions(merge: true));

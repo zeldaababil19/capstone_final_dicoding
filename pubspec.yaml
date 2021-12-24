@@ -35,7 +35,6 @@ dependencies:
   firebase_database: ^8.0.1
   flutter:
     sdk: flutter
-  # flutter_lints: ^1.0.0
   flutter_signin_button: ^2.0.0
   flutter_test:
     sdk: flutter
@@ -54,6 +53,8 @@ dependencies:
     git:
       url: https://github.com/DPLYR-dev/SplashScreenFlutterPackage.git
       ref: master
+  image_picker: ^0.8.4+4
+  firebase_storage: ^10.2.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
